@@ -118,18 +118,16 @@ class Feeds extends CActiveRecord {
     }
 
     public function afterSave() {
-        if ($this->type != Feeds::TYPE_TAG_POST) {
-            $attributes = new FeedsAttributes;
-            $attributes->id_feeds = $this->id_feeds;
-            $attributes->type = $this->type;
-            $attributes->description = $this->getDescription();
-            $attributes->file_name = $this->fileName;
-            if (!$attributes->save()) {
-                throw new CDbException("Error Save : " . print_r($attributes->getErrors(), TRUE));
-            }
-            if ($this->jsonMention !== "")
-                $this->generateFeedTags($this);
+        $attributes = new FeedsAttributes;
+        $attributes->id_feeds = $this->id_feeds;
+        $attributes->type = $this->type;
+        $attributes->description = $this->getDescription();
+        $attributes->file_name = $this->fileName;
+        if (!$attributes->save()) {
+            throw new CDbException("Error Save : " . print_r($attributes->getErrors(), TRUE));
         }
+        if ($this->jsonMention !== "")
+            $this->generateFeedTags($this);
     }
 
     public function getDescription() {
@@ -313,26 +311,12 @@ class Feeds extends CActiveRecord {
     public static function generateFeedTags($feed) {
         $mentions = CJSON::decode($feed->jsonMention);
         foreach ($mentions as $mention) {
+            $model = new Feeds;
             if ($mention['type'] == "user") {
-                $model = new Feeds;
-                if ($feed->post_interest_id != null) {
-                    $model->post_interest_id = $feed->post_interest_id;
-                    $model->post_type = Feeds::POST_GROUP;
-                }
-                if ($feed->post_community_id != null) {
-                    $model->post_community_id = $feed->post_community_id;
-                    $model->post_type = Feeds::POST_COMMUNITY;
-                }
                 $model->id_user = $mention['id'];
-                $model->save();
             } else if ($mention['type'] == "interest") {
-                $model = new Feeds;
                 $model->post_interest_id = $mention['id'];
                 $model->post_type = Feeds::POST_GROUP;
-                if ($feed->post_community_id != null) {
-                    $model->post_community_id = $feed->post_community_id;
-                    $model->post_type = Feeds::POST_COMMUNITY;
-                }
                 $model->id_user = $feed->id_user;
             }
             $model->text_caption = "-"; //$feed->text_caption
