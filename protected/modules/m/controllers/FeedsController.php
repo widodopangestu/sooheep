@@ -18,7 +18,7 @@ class FeedsController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload'),
+                'actions' => array('index', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -190,4 +190,36 @@ class FeedsController extends Controller {
       );
       }
      */
+    public function actionGet_mention() {
+        $friends = Friend::model()->findAll(array(
+			'condition' => 'id_user = :idUser AND approval = 1',
+			'params' => array(
+				':idUser' => Yii::app()->user->id['id']
+			),
+			'order' => 'request_date DESC',
+			'limit' => 200  
+		));
+        $interests = UserInterest::model()->findAllByAttributes(array('id_user' => Yii::app()->user->id['id']));
+        $data = array();
+        foreach ($friends as $friend) {
+            $data[] = array(
+                "id" => $friend->idUserFriend->id_user,
+                "name" => $friend->idUserFriend->fullName,
+                "avatar" => $friend->idUserFriend->pictureUrl,
+                "type" => "user"
+            );
+        }
+        foreach ($interests as $interest){            
+            $data[] = array(
+                "id" => $interest->idInterest->id_interest,
+                "name" => $interest->idInterest->interest_name,
+                "avatar" => Yii::app()->theme->baseUrl . "/images/interest-logo.png",
+                "type" => "interest"
+            );
+        }
+        header('Content-type: application/json');
+        echo CJSON::encode($data);
+        Yii::app()->end();
+    }
+
 }

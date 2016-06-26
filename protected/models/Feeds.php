@@ -15,9 +15,16 @@
  * @property string $post_type
  * @property string $post_interest_id
  * @property string $post_community_id
+ * @property integer $tag_id
+ * @property integer $repost_id
  *
  * The followings are the available model relations:
+ * @property Feeds $tag
+ * @property Feeds[] $feeds
+ * @property Feeds $repost
+ * @property Feeds[] $feeds1
  * @property FeedsAttributes[] $feedsAttributes
+ * @property FeedsComments[] $feedsComments
  * @property FeedsCommunity[] $feedsCommunities
  */
 class Feeds extends CActiveRecord {
@@ -29,9 +36,10 @@ class Feeds extends CActiveRecord {
     public $type;
     public $idUsers;
     public $file;
-    public $fileName;
-    public $filePath;
-    public $link;
+    public $fileName = "";
+    public $filePath = "";
+    public $link = "";
+    public $jsonMention = "";
 
     const TYPE_TEXT_POST = 1;
     const TYPE_IMAGE_POST = 2;
@@ -41,6 +49,8 @@ class Feeds extends CActiveRecord {
     const TYPE_MUSIC_POST = 6;
     const TYPE_LOCATION_POST = 7;
     const TYPE_FILE_POST = 8;
+    const TYPE_TAG_POST = 9;
+    const TYPE_REPOST_POST = 10;
     const POST_USER = 1;
     const POST_GROUP = 2;
     const POST_COMMUNITY = 3;
@@ -58,8 +68,8 @@ class Feeds extends CActiveRecord {
         return array(
             array('id_user, text_caption, hash', 'required'),
             //array('images','file','types'=>'jpg,jpeg,gif,png','maxSize'=>10*1024*1024, 'on' => 'uploadImg'),
-            array('id_user, isDeleted', 'numerical', 'integerOnly' => true),
-            array('update_date, hash, deleted_date, post_type, post_interest_id, post_community_id, type, filePath, fileName, location', 'safe'),
+            array('id_user, isDeleted, tag_id, repost_id', 'numerical', 'integerOnly' => true),
+            array('update_date, hash, deleted_date, post_type, post_interest_id, post_community_id, type, filePath, fileName, location, tag_id, repost_id, jsonMention', 'safe'),
             array('file', 'file', 'types' => 'pdf, xls, xlsx, doc, docx, ppt, pptx, odt, ods, odp, zip, rar, txt, mp4, mp3, png, jpg, jpeg', 'allowEmpty' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -74,6 +84,11 @@ class Feeds extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'user' => array(self::BELONGS_TO, 'Users', 'id_user'),
+            'tag' => array(self::BELONGS_TO, 'Feeds', 'tag_id'),
+            'tagFeeds' => array(self::HAS_MANY, 'Feeds', 'tag_id'),
+            'repost' => array(self::BELONGS_TO, 'Feeds', 'repost_id'),
+            'repostFeeds' => array(self::HAS_MANY, 'Feeds', 'repost_id'),
             'feedsAttributes' => array(self::HAS_ONE, 'FeedsAttributes', 'id_feeds'),
             'feedsCommunities' => array(self::HAS_MANY, 'FeedsCommunity', 'id_feeds'),
             'feedsComment' => array(self::HAS_MANY, 'FeedsComments', 'id_feeds'),
@@ -81,10 +96,12 @@ class Feeds extends CActiveRecord {
     }
 
     public function beforeValidate() {
-        $user = Yii::app()->user->id;
-        $this->id_user = $user['id'];
-        $hash = strval(time()) . strval($user['id']);
-        $this->hash = sha1($hash);
+        if ($this->type !== Feeds::TYPE_TAG_POST) {
+            $user = Yii::app()->user->id;
+            $this->id_user = $user['id'];
+            $hash = strval(time()) . strval($user['id']);
+            $this->hash = sha1($hash);
+        }
         return true;
     }
 
@@ -101,13 +118,17 @@ class Feeds extends CActiveRecord {
     }
 
     public function afterSave() {
-        $attributes = new FeedsAttributes;
-        $attributes->id_feeds = $this->id_feeds;
-        $attributes->type = $this->type;
-        $attributes->description = $this->getDescription();
-        $attributes->file_name = $this->fileName;
-        if (!$attributes->save()) {
-            throw new CDbException("Error Save : " . print_r($attributes->getErrors(), TRUE));
+        if ($this->type != Feeds::TYPE_TAG_POST) {
+            $attributes = new FeedsAttributes;
+            $attributes->id_feeds = $this->id_feeds;
+            $attributes->type = $this->type;
+            $attributes->description = $this->getDescription();
+            $attributes->file_name = $this->fileName;
+            if (!$attributes->save()) {
+                throw new CDbException("Error Save : " . print_r($attributes->getErrors(), TRUE));
+            }
+            if ($this->jsonMention !== "")
+                $this->generateFeedTags($this);
         }
     }
 
@@ -132,6 +153,12 @@ class Feeds extends CActiveRecord {
             case self::TYPE_LOCATION_POST:
                 $description = $this->location;
                 break;
+            case self::TYPE_TAG_POST:
+                $description = "Tag";
+                break;
+            case self::TYPE_REPOST_POST:
+                $description = "Repost";
+                break;
         }
         return $description;
     }
@@ -144,7 +171,7 @@ class Feeds extends CActiveRecord {
         } else {
             if ($id == NULL) {
                 $id_user = intval(Yii::app()->user->id['id']);
-                $criteria->condition = 't.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id';
+                $criteria->condition = '(t.tag_id <> null AND t.id_user <> :id) AND t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id';
             } else {
                 $id_user = intval($id);
                 $criteria->condition = 't.id_user = :id';
@@ -281,6 +308,39 @@ class Feeds extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    public static function generateFeedTags($feed) {
+        $mentions = CJSON::decode($feed->jsonMention);
+        foreach ($mentions as $mention) {
+            if ($mention['type'] == "user") {
+                $model = new Feeds;
+                if ($feed->post_interest_id != null) {
+                    $model->post_interest_id = $feed->post_interest_id;
+                    $model->post_type = Feeds::POST_GROUP;
+                }
+                if ($feed->post_community_id != null) {
+                    $model->post_community_id = $feed->post_community_id;
+                    $model->post_type = Feeds::POST_COMMUNITY;
+                }
+                $model->id_user = $mention['id'];
+                $model->save();
+            } else if ($mention['type'] == "interest") {
+                $model = new Feeds;
+                $model->post_interest_id = $mention['id'];
+                $model->post_type = Feeds::POST_GROUP;
+                if ($feed->post_community_id != null) {
+                    $model->post_community_id = $feed->post_community_id;
+                    $model->post_type = Feeds::POST_COMMUNITY;
+                }
+                $model->id_user = $feed->id_user;
+            }
+            $model->text_caption = "-"; //$feed->text_caption
+            $model->hash = $feed->hash;
+            $model->tag_id = $feed->id_feeds;
+            $model->type = Feeds::TYPE_TAG_POST;
+            $model->save();
+        }
     }
 
 }

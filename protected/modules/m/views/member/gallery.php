@@ -122,7 +122,7 @@
                                         <tr class="file">
                                             <td><a href="<?php echo $file ?>"><?php echo $data->file_name ?></a></td>
                                             <td><?php echo $data->idFeeds->text_caption ?></td>  
-                                            <td><div class="download-file"><?php echo CHtml::link("Download", $file); ?></div></td>
+                                            <td><a onclick="window.location.href = '<?php echo $file ?>';" href="<?php echo $file ?>" >Download</a></td>
                                         </tr>
                                         <?php
                                     endforeach;

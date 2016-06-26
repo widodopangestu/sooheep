@@ -19,6 +19,7 @@
         <link rel="stylesheet" href="<?php echo $baseUrl ?>bower_components/swipebox/src/css/swipebox.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.fileupload.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/gallery.css" id="theme-style">
+        <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/jquery.mentionsInput.css" id="theme-style">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/app.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/uploadfile.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/themes/town/style.css" id="theme-style">
@@ -186,7 +187,7 @@
                     <h3>What do you heep?</h3>
                     <?php
                     $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-                        'id' => 'feeds-file',
+                        'id' => 'feeds-location',
                         'type' => 'horizontal',
                         'action' => CController::createUrl('/m/feeds/setFeed'),
                         'htmlOptions' => array(
@@ -205,6 +206,7 @@
                             if ($this->community != null) {
                                 echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
                             }
+                            echo $form->hiddenField($feed, 'jsonMention');
                             echo $form->hiddenField($feed, 'location');
                             echo $form->hiddenField($feed, 'filePath');
                             echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_LOCATION_POST));
@@ -273,6 +275,7 @@
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
                         }
+                        echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_FILE_POST));
@@ -327,6 +330,7 @@
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
                         }
+                        echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_MUSIC_POST));
@@ -381,6 +385,7 @@
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
                         }
+                        echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_VIDEO_POST));
@@ -434,6 +439,7 @@
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
                         }
+                        echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_IMAGE_POST));
@@ -490,6 +496,7 @@
                                 echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
                                 echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
                             }
+                            echo $form->hiddenField($feed, 'jsonMention');
                             echo $form->hiddenField($feed, 'fileName');
                             echo $form->hiddenField($feed, 'filePath');
                             echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_TEXT_POST));
@@ -620,11 +627,57 @@
                             $('#feeds-file input[name=\"Feeds[fileName]\"]').val(data.file_name);
                         },
                     });
-                    $('.download-file').on('click', function() {
-                        console.log('open link');
-                        window.location = $(this).find('a').attr('href'); 
-                        return false;
+            ", CClientScript::POS_END);
+    Yii::app()->clientScript->registerScript('mentions', "
+        $(function () {
+            $('textarea.share-text').mentionsInput({
+                onDataRequest: function (mode, query, callback) {
+                    $.getJSON('" . Yii::app()->baseUrl . "/m/feeds/get_mention', function (responseData) {
+                        responseData = _.filter(responseData, function (item) {
+                            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        });
+                        callback.call(this, responseData);
                     });
+                }
+
+            });
+            $('#feeds-text').submit(function () {
+                $('#feeds-text textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-text input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+
+                });
+            });
+            $('#feeds-file').submit(function () {
+                $('#feeds-file textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-file input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+
+                });
+            });
+            $('#feeds-location').submit(function () {
+                $('#feeds-location textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-location input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+
+                });
+            });
+            $('#feeds-audio').submit(function () {
+                $('#feeds-audio textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-audio input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+
+                });
+            });
+            $('#feeds-video').submit(function () {
+                $('#feeds-video textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-video input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+
+                });
+            });
+            $('#feeds-image').submit(function () {
+                $('#feeds-image textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-image input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+
+                });
+            });
+        });        
             ", CClientScript::POS_END);
     ?>
 
@@ -641,6 +694,10 @@
     <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.uploadfile.min.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/video.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/videojs-ie8.min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.events.input.js"></script>
+    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.elastic.js"></script>
+    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/underscore-min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.mentionsInput.js"></script>
     <script>
         // This example requires the Places library. Include the libraries=places
         // parameter when you first load the API. For example:
