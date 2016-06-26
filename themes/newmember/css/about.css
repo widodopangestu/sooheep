@@ -1,0 +1,79 @@
+.list-group-item.active, 
+.list-group-item.active:focus, 
+.list-group-item.active:hover {
+  z-index: 1;
+  color: #fff;
+  background-color: #2C93FF;
+  border-color: #2C93FF;
+}
+
+.list-group-item:first-child {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.list-group-item:last-child {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.list-group-item {
+  border: 0px solid #ddd;
+}
+
+.about-tab-menu a i.fa {
+  margin-right: 3px;
+}
+
+div.about-tab div.about-tab-content:not(.active){
+  display: none;
+}
+
+.about-title {
+  font-size: 30px !important;
+}
+
+.carousel {
+    margin-bottom: 0;
+}
+
+/* The controlsy */
+.carousel-control {
+    left: -12px;
+    height: 40px;
+    width: 40px;
+    background: none repeat scroll 0 0 #222222;
+    border: 4px solid #FFFFFF;
+    border-radius: 23px 23px 23px 23px;
+    margin-top: 35px;
+}
+.carousel-control.right {
+  right: -12px;
+}
+/* The indicators */
+.carousel-indicators {
+  right: 50%;
+  top: auto;
+  bottom: -10px;
+  margin-right: -19px;
+}
+/* The colour of the indicators */
+.carousel-indicators li {
+  background: #cecece;
+}
+.carousel-indicators .active {
+background: #428bca;
+}
+
+.about-clearfix {
+  width: 100%;
+  height: 40px;
+}
+
+.img-content {
+    margin-top:40px;    
+}
+
+.img-content img {
+  margin-bottom:20px;
+}

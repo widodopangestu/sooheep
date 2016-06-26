@@ -1,0 +1,15 @@
+/nbproject/
+/assets/
+/protected/runtime/
+/protected/logs/
+/protected/cookie/
+/index.php
+/index-test.php
+/uploads/
+/protected/config/main.php
+/framework14/
+/.settings/
+/.buildpath
+/documents/
+.DS_Store
+*~
