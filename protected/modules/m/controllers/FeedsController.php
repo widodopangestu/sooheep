@@ -192,7 +192,7 @@ class FeedsController extends Controller {
      */
     public function actionGet_mention() {
         $friends = Friend::model()->findAll(array(
-			'condition' => 'id_user = :idUser AND approval = 1',
+			'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
 			'params' => array(
 				':idUser' => Yii::app()->user->id['id']
 			),

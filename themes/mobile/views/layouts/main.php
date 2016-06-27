@@ -461,7 +461,61 @@
             </div>	
         </div>
     </div>
+    <div class="popup popup-repost">
+        <div class="content-block">
+            <a href="#" class="close-popup">
+                Close <i class="fa fa-close"></i>
+            </a>
+            <div class="img-post text-center mt-10">
 
+            </div>
+
+            <div class="forms">
+                <h3>What do you heep?</h3>
+                <?php
+                $feed = new Feeds();
+                $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+                    'id' => 'feeds-repost',
+                    'type' => 'horizontal',
+                    'action' => CController::createUrl('/m/feeds/setFeed'),
+                    'htmlOptions' => array(
+                        //'enctype'=>'multipart/form-data'
+                        'class' => 'js-validate'
+                    )
+                ));
+                ?>
+                <div class="form-row">
+                    <div class="input-text">
+                        <?php
+                        if ($this->interest != null) {
+                            echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                        }
+                        if ($this->community != null) {
+                            echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                        }
+                        echo $form->hiddenField($feed, 'jsonMention');
+                        echo $form->hiddenField($feed, 'repost_id');
+                        echo $form->hiddenField($feed, 'fileName');
+                        echo $form->hiddenField($feed, 'filePath');
+                        echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_REPOST_POST));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        ?>
+                    </div>
+                </div>
+                <div class="feeds-repost-content"style="
+                     background: #fff;
+                     padding: 10px;
+                     border-radius: 5px;
+                     "></div>
+                <div class="form-row">
+                    <div class="input-submit">
+                        <button type="submit" class="button button-big js-form-submit button-fill pull-right button-primary">Send</button>
+                    </div>
+                </div>
+                <?php $this->endWidget(); ?>
+            </div>	
+        </div>
+    </div>
     <!-- Picker -->
     <div class="picker-modal picker-social">
         <div class="toolbar">
@@ -677,7 +731,19 @@
 
                 });
             });
+            $('#feeds-repost').submit(function () {
+                $('#feeds-repost textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-repost input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+                });
+            });
         });        
+            ", CClientScript::POS_END);
+    Yii::app()->clientScript->registerScript('repost', "
+        function loadFeeds(elm) {
+            str = elm.prev().html();
+            $('.feeds-repost-content').html(str);
+            $('#feeds-repost input[name=\"Feeds[repost_id]\"]').val(elm.attr('id'));
+        }    
             ", CClientScript::POS_END);
     ?>
 
