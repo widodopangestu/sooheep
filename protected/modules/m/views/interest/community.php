@@ -91,7 +91,7 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
                     <div class="form-row">
                         <div class="input-text">
                             <?php
-                            echo $form->textField($interest, 'interest_name', array('placeholder' => 'What Your Interest?'));
+                            echo $form->textField($community, 'community_name', array('placeholder' => 'What Your Interest?'));
                             ?>
                             <span class="search-icon"><i class="fa fa-search"></i></span>
                         </div>
@@ -105,9 +105,9 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
                 </div>
                 <?php
                 $this->widget('zii.widgets.CListView', array(
-                    'dataProvider' => $interest->searchMobile(),
+                    'dataProvider' => $community->search(),
                     'template' => "{items}{pager}",
-                    'itemView' => 'list_of_interest',
+                    'itemView' => 'list_of_community',
                     'id' => 'interest-list',
                     'summaryText' => false,
                     'itemsTagName' => 'ul',

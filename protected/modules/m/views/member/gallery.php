@@ -18,8 +18,8 @@
                                 foreach ($feedImages as $data):
                                     ?>
                                     <li>
-                                        <a rel="picture" href="<?php echo Yii::app()->request->baseUrl . $data->description ?>" class="zoom" title="Title"> 
-                                            <img src="<?php echo Yii::app()->request->baseUrl . $data->description ?>" alt="image" />
+                                        <a rel="picture" href="<?php Yii::app()->request->baseUrl . Yii::app()->params['timeline'] . $data->description ?>" class="zoom" title="<?php echo $data->file_name; ?>"> 
+                                            <img src="<?php echo Yii::app()->request->baseUrl . Yii::app()->params['timeline'] . $data->description ?>" alt="image" />
                                         </a>
                                     </li>
                                     <?php
@@ -27,28 +27,6 @@
                             endif;
                             ?>
                         </ul>
-                        <?php
-                        /* $this->widget('zii.widgets.CListView', array(
-                          'dataProvider' => $gallery,
-                          'template' => "{items}{pager}",
-                          'itemView' => 'item_gallery',
-                          'ajaxUpdate' => false,
-                          'id' => 'gallery',
-                          'itemsTagName' => 'ul',
-                          'itemsCssClass'=>'gallery-list gallery-3col',
-                          'summaryText'=>false,
-                          'pagerCssClass'=>'pagination-gallery',
-                          'pager' => array(
-                          'class' => 'ext.infiniteScroll.IasPager',
-                          'rowSelector'=>'.img-gal',
-                          'listViewId' => 'gallery',
-                          'pagerSelector'=>'.pagination-gallery',
-                          'header' => '',
-                          'loaderText'=>'Please Wait...',
-                          'options' => array('history' => false, 'triggerPageTreshold' => 3, 'trigger'=>'Load more'),
-                          ),
-                          )); */
-                        ?>
                     </div>
 
                     <div id="tab2" class="tab">
