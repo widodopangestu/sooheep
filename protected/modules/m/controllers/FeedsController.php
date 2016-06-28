@@ -1,5 +1,7 @@
 <?php
 
+Yii::import("application.extensions.thumbnailer.ThumbLib_inc", true);
+
 class FeedsController extends Controller {
 
     public $layout = '//layouts/main';
@@ -127,6 +129,10 @@ class FeedsController extends Controller {
                 $file_path = $hash . "." . $file->getExtensionName();
                 $file_name = $file->getName();
                 $file->saveAs($dir . $file_path);
+                if (in_array($file->getExtensionName(), array('jpg', 'png', 'gif'))) {
+                    $PhpThumbFactory = new PhpThumbFactory();
+                    $PhpThumbFactory->create($dir . $file_path)->Resize(361, 300)->save($dir . "thumb_" . $file_path);
+                }
                 $return = array('file_name' => $file_name, 'file_path' => $file_path);
             }
 
@@ -192,13 +198,13 @@ class FeedsController extends Controller {
      */
     public function actionGet_mention() {
         $friends = Friend::model()->findAll(array(
-			'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
-			'params' => array(
-				':idUser' => Yii::app()->user->id['id']
-			),
-			'order' => 'request_date DESC',
-			'limit' => 200  
-		));
+            'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
+            'params' => array(
+                ':idUser' => Yii::app()->user->id['id']
+            ),
+            'order' => 'request_date DESC',
+            'limit' => 200
+        ));
         $interests = UserInterest::model()->findAllByAttributes(array('id_user' => Yii::app()->user->id['id']));
         $data = array();
         foreach ($friends as $friend) {
@@ -209,7 +215,7 @@ class FeedsController extends Controller {
                 "type" => "user"
             );
         }
-        foreach ($interests as $interest){            
+        foreach ($interests as $interest) {
             $data[] = array(
                 "id" => $interest->idInterest->id_interest,
                 "name" => $interest->idInterest->interest_name,

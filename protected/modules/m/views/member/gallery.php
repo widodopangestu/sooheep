@@ -18,8 +18,8 @@
                                 foreach ($feedImages as $data):
                                     ?>
                                     <li>
-                                        <a rel="picture" href="<?php Yii::app()->request->baseUrl . Yii::app()->params['timeline'] . $data->description ?>" class="zoom" title="<?php echo $data->file_name; ?>"> 
-                                            <img src="<?php echo Yii::app()->request->baseUrl . Yii::app()->params['timeline'] . $data->description ?>" alt="image" />
+                                        <a rel="picture" href="<?php echo Yii::app()->request->baseUrl . Yii::app()->params['timeline'] . $data->description ?>" class="zoom" title="<?php echo $data->file_name; ?>"> 
+                                            <img src="<?php echo Yii::app()->request->baseUrl . Yii::app()->params['timeline'] . "thumb_" . $data->description ?>" alt="image" />
                                         </a>
                                     </li>
                                     <?php
