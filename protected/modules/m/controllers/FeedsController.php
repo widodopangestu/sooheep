@@ -1,5 +1,7 @@
 <?php
 
+Yii::import("application.extensions.thumbnailer.ThumbLib_inc", true);
+
 class FeedsController extends Controller {
 
     public $layout = '//layouts/main';
@@ -151,6 +153,10 @@ class FeedsController extends Controller {
                 $file_path = $hash . "." . $file->getExtensionName();
                 $file_name = $file->getName();
                 $file->saveAs($dir . $file_path);
+                if (in_array($file->getExtensionName(), array('jpg', 'png', 'gif'))) {
+                    $PhpThumbFactory = new PhpThumbFactory();
+                    $PhpThumbFactory->create($dir . $file_path)->Resize(361, 300)->save($dir . "thumb_" . $file_path);
+                }
                 $return = array('file_name' => $file_name, 'file_path' => $file_path);
             }
 

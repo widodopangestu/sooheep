@@ -42,6 +42,9 @@
                     <a data-popup=".popup-repost" onclick="loadFeeds($(this));" class="link open-popup text" href="#" id="<?php echo $data->id_feeds ?>">
                         <span class="fa fa-retweet"style="color: #bc5228;"></span>
                     </a> 
+                    <a onclick="loadComments($(this));" class="link text" href="#" id="<?php echo $data->id_feeds ?>">
+                        <span class="fa fa-comment"style="color: #bc5228;"></span>
+                    </a> 
                 </div>
             </div>
         </div>

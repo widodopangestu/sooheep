@@ -3,6 +3,7 @@
 class InterestController extends Controller {
 
     public $layout = '//layouts/main';
+    public $defaultAction = 'addInterest';
 
     /**
      * Specifies the access control rules.
@@ -22,17 +23,13 @@ class InterestController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'addInterest', 'listInterest', 'join', 'group', 'community'),
+                'actions' => array('index', 'addInterest', 'listInterest', 'join', 'joinCommunity', 'group', 'community', 'listCommunity'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
-    }
-
-    public function actionIndex() {
-        $this->render('index');
     }
 
     public function actionAddInterest() {
@@ -113,6 +110,46 @@ class InterestController extends Controller {
         }
     }
 
+    public function actionJoinCommunity($q) {
+        if (isset($_POST['id'])) {
+            if ($q == "join") {
+                $cek = InterestCommunityMember::model()->findByAttributes(array(
+                    'id_user' => Yii::app()->user->id['id'],
+                    'id_interest_community' => $_POST['id']
+                ));
+                if ($cek == null) {
+                    $interest = new InterestCommunityMember();
+                    $interest->id_user = Yii::app()->user->id['id'];
+                    $interest->id_interest_community = $_POST['id'];
+                    
+                    if ($interest->save()) {
+                        echo CJSON::encode(array('sukses' => "yes"));
+                    } else {
+                        echo CJSON::encode(array('sukses' => "no", "errmsg" => "Invalid request"));
+                    }
+                } else {
+                    echo CJSON::encode(array('sukses' => "no", "errmsg" => "You have already added this one"));
+                }
+            } else {
+                $cek = InterestCommunityMember::model()->findByAttributes(array(
+                    'id_user' => Yii::app()->user->id['id'],
+                    'id_interest_community' => $_POST['id']
+                ));
+                if ($cek != null) {
+                    if ($cek->delete()) {
+                        echo CJSON::encode(array('sukses' => "yes"));
+                    } else {
+                        echo CJSON::encode(array('sukses' => "no", "errmsg" => "Invalid request"));
+                    }
+                } else {
+                    echo CJSON::encode(array('sukses' => "no", "errmsg" => "You dont have this one"));
+                }
+            }
+        } else {
+            echo CJSON::encode(array('sukses' => "no", "errmsg" => "Invalid request"));
+        }
+    }
+
     public function actionListInterest($q) {
         $interest = new Interest('searchMobile');
         $interest->id_subgroup = $q;
@@ -125,6 +162,19 @@ class InterestController extends Controller {
 
         $this->render('interest', array(
             'interest' => $interest
+        ));
+    }
+
+    public function actionListCommunity() {
+        $community = new InterestCommunity('search');
+
+        if (isset($_GET['InterestCommunity'])) {
+            $community->unsetAttributes();
+            $community->attributes = $_GET['InterestCommunity'];
+        }
+
+        $this->render('community', array(
+            'community' => $community
         ));
     }
 
