@@ -37,6 +37,9 @@ switch ($data->post_type) {
             case Feeds::TYPE_REPOST_POST:
                 $this->renderPartial('_repost_post', array('data' => $tag));
                 break;
+            case Feeds::TYPE_POLL_POST:
+                $this->renderPartial('_poll_post', array('data' => $tag));
+                break;
             default:
                 $this->renderPartial('_text_post', array('data' => $tag));
                 break;

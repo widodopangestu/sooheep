@@ -7,22 +7,24 @@
  * @property integer $id_feeds
  * @property integer $id_user
  * @property string $text_caption
- * @property integer $hash
+ * @property string $hash
  * @property string $created_date
  * @property string $update_date
  * @property integer $isDeleted
  * @property string $deleted_date
- * @property string $post_type
- * @property string $post_interest_id
- * @property string $post_community_id
+ * @property integer $post_type
+ * @property integer $post_interest_id
+ * @property integer $post_community_id
  * @property integer $tag_id
  * @property integer $repost_id
+ * @property integer $poll_id
  *
  * The followings are the available model relations:
  * @property Feeds $tag
  * @property Feeds[] $feeds
  * @property Feeds $repost
  * @property Feeds[] $feeds1
+ * @property Poll $poll
  * @property FeedsAttributes[] $feedsAttributes
  * @property FeedsComments[] $feedsComments
  * @property FeedsCommunity[] $feedsCommunities
@@ -51,6 +53,7 @@ class Feeds extends CActiveRecord {
     const TYPE_FILE_POST = 8;
     const TYPE_TAG_POST = 9;
     const TYPE_REPOST_POST = 10;
+    const TYPE_POLL_POST = 11;
     const POST_USER = 1;
     const POST_GROUP = 2;
     const POST_COMMUNITY = 3;
@@ -68,7 +71,7 @@ class Feeds extends CActiveRecord {
         return array(
             array('id_user, text_caption, hash', 'required'),
             //array('images','file','types'=>'jpg,jpeg,gif,png','maxSize'=>10*1024*1024, 'on' => 'uploadImg'),
-            array('id_user, isDeleted, tag_id, repost_id', 'numerical', 'integerOnly' => true),
+            array('id_user, isDeleted, tag_id, repost_id, poll_id', 'numerical', 'integerOnly' => true),
             array('update_date, hash, deleted_date, post_type, post_interest_id, post_community_id, type, filePath, fileName, location, tag_id, repost_id, jsonMention', 'safe'),
             array('file', 'file', 'types' => 'pdf, xls, xlsx, doc, docx, ppt, pptx, odt, ods, odp, zip, rar, txt, mp4, mp3, png, jpg, jpeg', 'allowEmpty' => true),
             // The following rule is used by search().
@@ -89,6 +92,7 @@ class Feeds extends CActiveRecord {
             'tagFeeds' => array(self::HAS_MANY, 'Feeds', 'tag_id'),
             'repost' => array(self::BELONGS_TO, 'Feeds', 'repost_id'),
             'repostFeeds' => array(self::HAS_MANY, 'Feeds', 'repost_id'),
+            'poll' => array(self::BELONGS_TO, 'Poll', 'poll_id'),
             'feedsAttributes' => array(self::HAS_ONE, 'FeedsAttributes', 'id_feeds'),
             'feedsCommunities' => array(self::HAS_MANY, 'FeedsCommunity', 'id_feeds'),
             'feedsComment' => array(self::HAS_MANY, 'FeedsComments', 'id_feeds'),
@@ -156,6 +160,9 @@ class Feeds extends CActiveRecord {
                 break;
             case self::TYPE_REPOST_POST:
                 $description = "Repost";
+                break;
+            case self::TYPE_POLL_POST:
+                $description = "Poll";
                 break;
         }
         return $description;

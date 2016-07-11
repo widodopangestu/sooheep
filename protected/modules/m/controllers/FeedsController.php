@@ -73,6 +73,30 @@ class FeedsController extends Controller {
                 $feed->post_community_id = $_POST['Feeds']['post_community_id'];
             }
 
+            $poll = new Poll;
+            $choices = array();
+            if (isset($_POST['Poll'])) {
+                $poll->attributes = $_POST['Poll'];
+
+                // Setup poll choices
+                if (isset($_POST['PollChoice'])) {
+                    foreach ($_POST['PollChoice'] as $id => $choice) {
+                        $pollChoice = new PollChoice;
+                        $pollChoice->attributes = $choice;
+                        $choices[$id] = $pollChoice;
+                    }
+                }
+
+                if ($poll->save()) {
+                    $feed->poll_id = $poll->id;
+                    // Save any poll choices too
+                    foreach ($choices as $choice) {
+                        $choice->poll_id = $poll->id;
+                        $choice->save();
+                    }
+                }
+            }
+
             if ($feed->save()) {
                 if ($feed->post_interest_id != null) {
                     $this->redirect(Yii::app()->createUrl("/m/interest/group/q/" . $feed->post_interest_id));
@@ -192,13 +216,13 @@ class FeedsController extends Controller {
      */
     public function actionGet_mention() {
         $friends = Friend::model()->findAll(array(
-			'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
-			'params' => array(
-				':idUser' => Yii::app()->user->id['id']
-			),
-			'order' => 'request_date DESC',
-			'limit' => 200  
-		));
+            'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
+            'params' => array(
+                ':idUser' => Yii::app()->user->id['id']
+            ),
+            'order' => 'request_date DESC',
+            'limit' => 200
+        ));
         $interests = UserInterest::model()->findAllByAttributes(array('id_user' => Yii::app()->user->id['id']));
         $data = array();
         foreach ($friends as $friend) {
@@ -209,7 +233,7 @@ class FeedsController extends Controller {
                 "type" => "user"
             );
         }
-        foreach ($interests as $interest){            
+        foreach ($interests as $interest) {
             $data[] = array(
                 "id" => $interest->idInterest->id_interest,
                 "name" => $interest->idInterest->interest_name,

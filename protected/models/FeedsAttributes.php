@@ -8,7 +8,7 @@
  * @property integer $id_feeds
  * @property integer $type
  * @property string $description
- * @property string $dfile_name
+ * @property string $file_name
  *
  * The followings are the available model relations:
  * @property Feeds $idFeeds

@@ -116,6 +116,11 @@
 
                 <div class="toolbar" style="background-color:#B7461A !important;opacity:0.6;">
                     <div class="toolbar-inner">
+                        <?php if ($this->interest != null || $this->community != null) : ?>
+                            <a data-popup=".popup-poll" class="link open-popup" href="#">
+                                <span class="fa fa-list-alt"></span>
+                            </a>
+                        <?php endif; ?>
                         <a data-popup=".popup-map"  class="link open-popup" href="#">
                             <span class="fa fa-map-marker"></span>
                         </a> 
@@ -202,9 +207,11 @@
                             <?php
                             if ($this->interest != null) {
                                 echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                                echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
                             }
                             if ($this->community != null) {
                                 echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                                echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
                             }
                             echo $form->hiddenField($feed, 'jsonMention');
                             echo $form->hiddenField($feed, 'location');
@@ -271,9 +278,11 @@
                         <?php
                         if ($this->interest != null) {
                             echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
                         }
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
                         }
                         echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
@@ -326,9 +335,11 @@
                         <?php
                         if ($this->interest != null) {
                             echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
                         }
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
                         }
                         echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
@@ -381,9 +392,11 @@
                         <?php
                         if ($this->interest != null) {
                             echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
                         }
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
                         }
                         echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
@@ -435,9 +448,11 @@
                         <?php
                         if ($this->interest != null) {
                             echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
                         }
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
                         }
                         echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'fileName');
@@ -489,9 +504,11 @@
                         <?php
                         if ($this->interest != null) {
                             echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
                         }
                         if ($this->community != null) {
                             echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
                         }
                         echo $form->hiddenField($feed, 'jsonMention');
                         echo $form->hiddenField($feed, 'repost_id');
@@ -507,6 +524,180 @@
                      padding: 10px;
                      border-radius: 5px;
                      "></div>
+                <div class="form-row">
+                    <div class="input-submit">
+                        <button type="submit" class="button button-big js-form-submit button-fill pull-right button-primary">Send</button>
+                    </div>
+                </div>
+                <?php $this->endWidget(); ?>
+            </div>	
+        </div>
+    </div>
+    <div class="popup popup-poll">
+        <div class="content-block">
+            <a href="#" class="close-popup">
+                Close <i class="fa fa-close"></i>
+            </a>
+            <div class="img-post text-center mt-10">
+
+            </div>
+
+            <div class="forms">
+                <h3>What do you heep?</h3>
+                <?php
+                $feed = new Feeds();
+                $poll = new Poll;
+                $choices = array();
+                $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+                    'id' => 'feeds-poll',
+                    'type' => 'horizontal',
+                    'action' => CController::createUrl('/m/feeds/setFeed'),
+                    'htmlOptions' => array(
+                        //'enctype'=>'multipart/form-data'
+                        'class' => 'js-validate'
+                    )
+                ));
+                ?>
+                <div class="form-row">
+                    <div class="input-text">
+                        <?php
+                        if ($this->interest != null) {
+                            echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
+                        }
+                        if ($this->community != null) {
+                            echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
+                        }
+                        echo $form->hiddenField($feed, 'jsonMention');
+                        echo $form->hiddenField($feed, 'poll_id');
+                        echo $form->hiddenField($feed, 'fileName');
+                        echo $form->hiddenField($feed, 'filePath');
+                        echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_POLL_POST));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        ?>
+                    </div>
+                </div>
+                <div class="feeds-poll-content"style="
+                     background: #fff;
+                     padding: 10px;
+                     border-radius: 5px;
+                     ">
+                    <table border="0">
+                        <tr>
+                            <td><?php echo $form->labelEx($poll, 'title'); ?></td>
+                            <td><?php echo $form->textField($poll, 'title', array('size' => 60, 'maxlength' => 255)); ?></td>
+                            <td><?php echo $form->error($poll, 'title'); ?></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><?php echo $form->labelEx($poll, 'description'); ?></td>
+                            <td><?php echo $form->textArea($poll, 'description', array('rows' => 6, 'cols' => 50)); ?></td>
+                            <td><?php echo $form->error($poll, 'description'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo $form->labelEx($poll, 'status'); ?></td>
+                            <td><?php echo $form->dropDownList($poll, 'status', $poll->statusLabels()); ?></td>
+                            <td><?php echo $form->error($poll, 'status'); ?></td>
+                        </tr>
+                    </table>
+                    <h3>Choices</h3>
+
+                    <table id="poll-choices">
+                        <thead>
+                        <th>Weight/Sort</th>
+                        <th>Label</th>
+                        <th>Actions</th>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $newChoiceCount = 0;
+                            foreach ($choices as $choice) {
+                                $this->renderPartial('/pollchoice/_formChoice', array(
+                                    'id' => isset($choice->id) ? $choice->id : 'new' . ++$newChoiceCount,
+                                    'choice' => $choice,
+                                ));
+                            }
+                            ++$newChoiceCount; // Increase once more for Ajax additions
+                            ?>
+                            <tr id="add-pollchoice-row">
+                                <td class="weight"></td>
+                                <td class="label">
+                                    <?php echo CHtml::textField('add_choice', '', array('size' => 50, 'id' => 'add_choice')); ?>
+                                    <div class="errorMessage" style="display:none">You must enter a label.</div>
+                                </td>
+                                <td class="actions">
+                                    <a href="#" id="add-pollchoice">Add Choice</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <?php
+                    $callback = Yii::app()->createUrl('/poll/pollchoice/ajaxcreate');
+                    $js = <<<JS
+var PollChoice = function(o) {
+  this.target = o;
+  this.label  = jQuery(".label input", o);
+  this.weight = jQuery(".weight select", o);
+  this.errorMessage = jQuery(".errorMessage", o);
+
+  var pc = this;
+
+  pc.label.blur(function() {
+    pc.validate();
+  });
+}
+PollChoice.prototype.validate = function() {
+  var valid = true;
+
+  if (this.label.val() == "") {
+    valid = false;
+    this.errorMessage.fadeIn();
+  }
+  else {
+    this.errorMessage.fadeOut();
+  }
+
+  return valid;
+}
+
+var newChoiceCount = {$newChoiceCount};
+var addPollChoice = new PollChoice(jQuery("#add-pollchoice-row"));
+
+jQuery("tr", "#poll-choices tbody").each(function() {
+  new PollChoice(jQuery(this));
+});
+
+jQuery("#add-pollchoice").click(function() {
+  if (addPollChoice.validate()) {
+    jQuery.ajax({
+      url: "{$callback}",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: "new"+ newChoiceCount,
+        label: addPollChoice.label.val()
+      },
+      success: function(data) {
+        addPollChoice.target.before(data.html);
+        addPollChoice.label.val('');
+        new PollChoice(jQuery('#'+ data.id));
+      }
+    });
+
+    newChoiceCount += 1;
+  }
+
+  return false;
+});
+JS;
+
+                    Yii::app()->clientScript->registerScript('pollHelp', $js, CClientScript::POS_END);
+                    ?>
+<!--                    <style type="text/css">
+                  </style>
+                  <iframe src="http://localhost/sooheep/poll/poll/create"  frameBorder="0" onload="resizeIframe(this)" style="overflow: scroll; width:100%;"></iframe>-->
+                </div>
                 <div class="form-row">
                     <div class="input-submit">
                         <button type="submit" class="button button-big js-form-submit button-fill pull-right button-primary">Send</button>
@@ -736,6 +927,11 @@
                     $('#feeds-repost input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
                 });
             });
+            $('#feeds-poll').submit(function () {
+                $('#feeds-poll textarea.share-text').mentionsInput('getMentions', function (data) {
+                    $('#feeds-poll input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+                });
+            });
         });        
             ", CClientScript::POS_END);
     Yii::app()->clientScript->registerScript('repost', "
@@ -744,6 +940,11 @@
             $('.feeds-repost-content').html(str);
             $('#feeds-repost input[name=\"Feeds[repost_id]\"]').val(elm.attr('id'));
         }    
+            ", CClientScript::POS_END);
+    Yii::app()->clientScript->registerScript('poll', "
+    function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.body. scrollHeight + 'px';
+  }
             ", CClientScript::POS_END);
     ?>
 
