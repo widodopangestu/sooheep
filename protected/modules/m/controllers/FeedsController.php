@@ -20,7 +20,7 @@ class FeedsController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention'),
+                'actions' => array('index', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention', 'ajaxListComments', 'ajaxNewComment', 'ajaxDeleteComment'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -221,6 +221,9 @@ class FeedsController extends Controller {
       }
      */
     public function actionGet_mention() {
+        if (!Yii::app()->request->isAjaxRequest) {
+            throw new CHttpException('403', 'Forbidden access.');
+        }
         $friends = Friend::model()->findAll(array(
             'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
             'params' => array(
@@ -250,6 +253,42 @@ class FeedsController extends Controller {
         header('Content-type: application/json');
         echo CJSON::encode($data);
         Yii::app()->end();
+    }
+
+    public function actionAjaxNewComment($id) {
+        if (!Yii::app()->request->isAjaxRequest) {
+            throw new CHttpException('403', 'Forbidden access.');
+        }
+        $comment = new FeedsComments();
+        $comment->id_feeds = $id;
+        $comment->id_user = Yii::app()->user->id['id'];
+
+        if (isset($_POST['FeedsComments'])) {
+            $comment->attributes = $_POST['FeedsComments'];
+            if ($comment->save()) {
+                $this->renderPartial('/comments/_comment', array(
+                    'comment' => $comment,
+                ));
+            }
+        }
+    }
+
+    public function actionAjaxDeleteComment($id, $type) {
+        if (!Yii::app()->request->isAjaxRequest) {
+            throw new CHttpException('403', 'Forbidden access.');
+        }
+        $comment = FeedsComments::model()->findByPk($id);
+        if ($comment !== null) {
+            if ($type == 'd') {
+                $comment->comment_deleted = 1;
+                $comment->delete_date = date("Y-m-d h:i:s");
+            } else {
+                $comment->blocked = 1;
+                $comment->blocked_date = date("Y-m-d h:i:s");
+            }
+            $comment->save(false);
+            echo $comment->id_feeds;
+        }
     }
 
 }

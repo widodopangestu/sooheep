@@ -95,7 +95,8 @@ class Feeds extends CActiveRecord {
             'poll' => array(self::BELONGS_TO, 'Poll', 'poll_id'),
             'feedsAttributes' => array(self::HAS_ONE, 'FeedsAttributes', 'id_feeds'),
             'feedsCommunities' => array(self::HAS_MANY, 'FeedsCommunity', 'id_feeds'),
-            'feedsComment' => array(self::HAS_MANY, 'FeedsComments', 'id_feeds'),
+            'feedsComment' => array(self::HAS_MANY, 'FeedsComments', 'id_feeds', 'condition' => 'comment_deleted IS NULL AND blocked IS NULL'),
+            'feedsCommentCount' => array(self::STAT, 'FeedsComments', 'id_feeds', 'condition' => 'comment_deleted IS NULL AND blocked IS NULL'),
         );
     }
 
@@ -332,6 +333,16 @@ class Feeds extends CActiveRecord {
             $model->type = Feeds::TYPE_TAG_POST;
             $model->save();
         }
+    }
+
+    public function getCountRepost() {
+        $sql = "SELECT count(id_feeds) as total FROM feeds WHERE repost_id ='" . $this->id_feeds . "'";
+        $result = Yii::app()->db->createCommand($sql)->queryRow();
+        $res = 0;
+        if ($result) {
+            $res = $result['total'];
+        }
+        return $res;
     }
 
 }

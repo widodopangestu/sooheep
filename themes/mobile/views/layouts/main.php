@@ -947,7 +947,31 @@ JS;
   }
             ", CClientScript::POS_END);
     ?>
+    <script type="text/javascript">
+        function deleteComment(id, s) {
+            if (s == 'd')
+                var r = confirm("Delete this comment?");
+            else
+                var r = confirm("Block this comment?");
+            if (r == true) {
+                jQuery.ajax({'type': 'POST', 'url': '/sooheep/m/feeds/ajaxDeleteComment/id/' + id + '/type/' + s, 'cache': false, 'success': function (html) {
+                        jQuery("#comment-" + id).remove();
+                        jQuery("#comment-count-" + html).html(jQuery("#list-comment-" + html + " li").size());
+                    }});
+            }
+            return false;
+        }
 
+        function addComment(id) {
+            jQuery.ajax({'type': 'POST', 'data': $("#comment-form-" + id).serialize(), 'url': '/sooheep/m/feeds/ajaxNewComment/id/' + id, 'cache': false, 'success': function (html) {
+                    jQuery("#list-comment-" + id).append(html);
+                    jQuery("#comment-count-" + id).html(jQuery("#list-comment-" + id + " li").size());
+                    jQuery("#comment-form-" + id + " textarea").val("");
+                }});
+            return false;
+        }
+
+    </script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.fileupload.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/framework7/dist/js/framework7.min.js"></script>
