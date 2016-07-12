@@ -39,7 +39,7 @@
                     ?>
                 </div>
                 <a data-popup=".popup-repost" onclick="loadFeeds($(this));" class="link open-popup text" href="#" id="<?php echo $data->id_feeds ?>">
-                    <span class="fa fa-retweet"style="color: #bc5228;"></span>
+                    <span class="fa fa-retweet"style="color: #bc5228;"> <?php echo $data->countRepost; ?> repost(s)</span>
                 </a> 
                 <a class="link text" href="#" id="<?php echo $data->id_feeds ?>">
                     <span class="fa fa-comment"style="color: #bc5228;"> <span id="comment-count-<?php echo $data->id_feeds ?>"><?php echo $data->feedsCommentCount; ?></span> comment(s)</span>

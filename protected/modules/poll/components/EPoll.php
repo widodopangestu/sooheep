@@ -74,7 +74,7 @@ class EPoll extends CPortlet
       // Save a user's vote
       if (isset($_POST['PortletPollVote_choice_id'])) {
         $userVote->choice_id = $_POST['PortletPollVote_choice_id'];
-        $userVote->poll_id = $model->id;
+        $userVote->poll_id = $_POST['PortletPollVote_poll_id'];
         if ($userVote->save()) {
           // Prevent submit on refresh
           $route = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : Yii::app()->controller->route;

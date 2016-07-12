@@ -43,6 +43,11 @@ if (Yii::app()->user->id['id'] == $model->feed->id_user) {
             'name' => 'PortletPollVote_choice_id'));
         ?>
         <?php echo $form->error($userVote, 'choice_id'); ?>
+        <?php
+        echo $form->hiddenField($userVote, 'poll_id', array(
+            'value' => $model->id,
+            'name' => 'PortletPollVote_poll_id'));
+        ?>
     </div>
 
     <div class="row buttons">
