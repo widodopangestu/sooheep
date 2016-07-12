@@ -18,7 +18,7 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
 				var idAwal = idInterest;
 				idInterest = parseInt(idInterest.replace("chek-interest-", ""));
 				$.ajax({
-					url:"' . CController::createUrl('/m/interest/join/q/join') . '",
+					url:"' . CController::createUrl('/m/interest/joinCommunity/q/join') . '",
 					type:"post",
 					data:{
 						id : idInterest
@@ -43,7 +43,7 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
 				idInterest = parseInt(idInterest.replace("chek-interest-", ""));
 				myApp.confirm("Are you sure to remove this one?", function(){
 					 $.ajax({
-						url:"' . CController::createUrl('/m/interest/join/q/removed') . '",
+						url:"' . CController::createUrl('/m/interest/joinCommunity/q/removed') . '",
 						type:"post",
 						data:{
 							id : idInterest
@@ -76,11 +76,6 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
     <div data-page="sub-group-interest" class="page group-interest">
         <div class="page-content">
             <div class="content-block mt-0 mb-0">
-                <div class="left">
-                    <a class="link button" onclick="window.location.href = '<?php echo Yii::app()->createUrl('/m/interest/addInterest') ?>';" href="#">
-                        <span class="icon-chevron-left"></span> <span>Back</span>
-                    </a>
-                </div><br><br>
                 <div class="forms">
                     <?php
                     $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
@@ -122,7 +117,7 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
                                                         var idAwal = idInterest;
                                                         idInterest = parseInt(idInterest.replace("chek-interest-", ""));
                                                         $.ajax({
-                                                            url:"' . CController::createUrl('/m/interest/join/q/join') . '",
+                                                            url:"' . CController::createUrl('/m/interest/joinCommunity/q/join') . '",
                                                             type:"post",
                                                             data:{
                                                                 id : idInterest
@@ -147,7 +142,7 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
                                                         idInterest = parseInt(idInterest.replace("chek-interest-", ""));
                                                         myApp.confirm("Are you sure to remove this one?", function(){
                                                         $.ajax({
-                                                           url:"' . CController::createUrl('/m/interest/join/q/removed') . '",
+                                                           url:"' . CController::createUrl('/m/interest/joinCommunity/q/removed') . '",
                                                            type:"post",
                                                            data:{
                                                                    id : idInterest
