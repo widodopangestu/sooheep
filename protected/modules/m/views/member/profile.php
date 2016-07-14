@@ -88,6 +88,12 @@ if (Yii::app()->user->hasFlash("pesan-add-sukses")) {
                                                     case Feeds::TYPE_REPOST_POST:
                                                         $this->renderPartial('_repost_post', array('data' => $data));
                                                         break;
+                                                    case Feeds::TYPE_POLL_POST:
+                                                        $this->renderPartial('_poll_post', array('data' => $data));
+                                                        break;
+                                                    case Feeds::TYPE_EVENT_POST:
+                                                        $this->renderPartial('_event_post', array('data' => $data));
+                                                        break;
                                                     default:
                                                         $this->renderPartial('_text_post', array('data' => $data));
                                                         break;

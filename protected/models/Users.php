@@ -155,11 +155,14 @@ class Users extends CActiveRecord {
     }
 
     public function getFriendsId() {
-        $sql = "SELECT friend.id_user_friend FROM friend WHERE friend.id_user = $this->id_user AND block = 0";
+        $sql = "SELECT friend.id_user_friend , friend.id_user FROM friend WHERE (friend.id_user = $this->id_user OR friend.id_user_friend = $this->id_user) AND block = 0";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $fr = array();
         foreach ($result as $res) {
-            $fr[] = $res['id_user_friend'];
+            if(!in_array($res['id_user_friend'], $fr))
+                $fr[] = $res['id_user_friend'];
+            if(!in_array($res['id_user'], $fr))
+                $fr[] = $res['id_user'];
         }
         return $fr;
     }

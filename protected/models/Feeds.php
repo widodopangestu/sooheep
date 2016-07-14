@@ -187,7 +187,11 @@ class Feeds extends CActiveRecord {
                 $user = Users::model()->findByPk($id_user);
                 $community = implode(',', $user->idCommunity);
                 $interest = implode(',', $user->idInterest['interest']);
-                $criteria->condition = 't.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.post_community_id IN (' . $community . ') OR t.post_interest_id IN (' . $interest . ')';
+                $fried = implode(',', $user->friendsId);
+                count($user->idCommunity) ? $whereCom = ' OR t.post_community_id IN (' . $community . ')' : $whereCom = '';
+                count($user->idInterest['interest']) ? $whereInt = ' OR t.post_interest_id IN (' . $interest . ')' : $whereInt = '';
+                count($user->friendsId) ? $whereFr = 't.id_user IN (' . $fried . ') ' : $whereFr = '';
+                $criteria->condition = $whereFr . 'OR t.id_user = :id' . $whereCom . $whereInt;
             } else {
                 $id_user = intval($id);
                 $criteria->condition = 't.id_user = :id';
