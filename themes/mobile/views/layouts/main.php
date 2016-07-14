@@ -1112,11 +1112,10 @@ JS;
                 }
             });
             ", CClientScript::POS_END);
-    ?>
-    <script type="text/javascript">
+    Yii::app()->clientScript->registerScript('event', "    
         function loadEvent(time) {
             $('#feeds-event input[name=\"Event[date]\"]').val(time);
-            jQuery.ajax({'type': 'POST', 'url': '<?php echo Yii::app()->createUrl('/m/interest/ajaxListEvent/time') ?>/' + time, 'cache': false, 'success': function (html) {
+            jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/interest/ajaxListEvent/time') . "/' + time, 'cache': false, 'success': function (html) {
                     jQuery('#list-event').html(html);
                 }});
             return false;
@@ -1124,8 +1123,9 @@ JS;
         function attend(id) {
             var r = confirm('Attend to this event?');
             if (r == true) {
-                jQuery.ajax({'type': 'POST', 'url': '<?php echo Yii::app()->createUrl('/m/interest/attend/id') ?>/' + id, 'cache': false, 'success': function () {
-                        jQuery('#btn-attend-' + id).hide();
+                jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/interest/attend/id') . "/' + id, 'cache': false, 'success': function () {
+                        jQuery('#btn-attend-' + id).remove();
+                        console.log(jQuery('#btn-attend-' + id));
                     }});
             }
             return false;
@@ -1133,13 +1133,15 @@ JS;
         function unattend(id) {
             var r = confirm('Cancel Attend to this event?');
             if (r == true) {
-                jQuery.ajax({'type': 'POST', 'url': '<?php echo Yii::app()->createUrl('/m/interest/unattend/id') ?>/' + id, 'cache': false, 'success': function () {
-                        jQuery('#btn-unattend-' + id).hide();
+                jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/interest/unattend/id') . "/' + id, 'cache': false, 'success': function () {
+                        jQuery('#btn-unattend-' + id).remove();
+                        console.log(jQuery('#btn-unattend-' + id));
                     }});
             }
             return false;
         }
-    </script>
+            ", CClientScript::POS_END);
+    ?>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.fileupload.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/framework7/dist/js/framework7.min.js"></script>
