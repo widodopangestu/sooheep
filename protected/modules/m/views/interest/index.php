@@ -1,7 +1,7 @@
 <?php
 Yii::app()->clientScript->registerScript('find-interest', '
 		$(".navbar").removeClass("navbar-clear");
-		$("#InterestSubgroup_name").keyup(function(){
+		$("#InterestCommunity_community_name").keyup(function(){
 			var words = $(this).val();
 			$.fn.yiiListView.update("sub-group", {
 		        data: $("#search-group-interst").serialize()

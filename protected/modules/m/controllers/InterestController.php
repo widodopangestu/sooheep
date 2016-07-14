@@ -112,7 +112,8 @@ class InterestController extends Controller {
 
     public function actionJoinCommunity($q) {
         if (isset($_POST['id'])) {
-            if ($q == "join") {
+            $ic = InterestCommunity::model()->findByPk($_POST['id']);
+            if ($q == "join" && $ic !== null) {
                 $cek = InterestCommunityMember::model()->findByAttributes(array(
                     'id_user' => Yii::app()->user->id['id'],
                     'id_interest_community' => $_POST['id']
@@ -121,7 +122,10 @@ class InterestController extends Controller {
                     $interest = new InterestCommunityMember();
                     $interest->id_user = Yii::app()->user->id['id'];
                     $interest->id_interest_community = $_POST['id'];
-
+                    $interest->id_interest = $ic->id_interest_group;
+                    $interest->active = 1;
+                    $interest->join_date = date('Y-m-d h:i:s');
+                    $interest->date = date('Y-m-d');
                     if ($interest->save()) {
                         echo CJSON::encode(array('sukses' => "yes"));
                     } else {

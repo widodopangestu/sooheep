@@ -15,21 +15,24 @@
  * The followings are the available model relations:
  * @property FeedsCommunity[] $feedsCommunities
  */
-class InterestCommunity extends CActiveRecord {
+class InterestCommunity extends CActiveRecord
+{
 
     public $userId;
 
     /**
      * @return string the associated database table name
      */
-    public function tableName() {
+    public function tableName()
+    {
         return 'interest_community';
     }
 
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules() {
+    public function rules()
+    {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
@@ -46,7 +49,8 @@ class InterestCommunity extends CActiveRecord {
     /**
      * @return array relational rules.
      */
-    public function relations() {
+    public function relations()
+    {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
@@ -57,7 +61,8 @@ class InterestCommunity extends CActiveRecord {
     /**
      * @return array customized attribute labels (name=>label)
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return array(
             'id' => 'ID',
             'id_interest_group' => 'Id Interest Group',
@@ -67,6 +72,16 @@ class InterestCommunity extends CActiveRecord {
             'isPrivate' => 'Is Private',
             'start_date' => 'Start Date',
         );
+    }
+
+    public function getIsInterested()
+    {
+        $model = InterestCommunityMember::model()->findByAttributes(array(
+            'id_user' => Yii::app()->user->id['id'],
+            'id_interest_community' => $this->id
+        ));
+
+        return ($model !== null);
     }
 
     /**
@@ -81,14 +96,15 @@ class InterestCommunity extends CActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search()
+    {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
         $criteria->compare('id_interest_group', $this->id_interest_group);
-        $criteria->compare('community_name', $this->community_name);
+        $criteria->compare('community_name', $this->community_name, true);
         $criteria->compare('community_hash', $this->community_hash, true);
         $criteria->compare('isActive', $this->isActive);
         $criteria->compare('isPrivate', $this->isPrivate);
@@ -106,7 +122,8 @@ class InterestCommunity extends CActiveRecord {
         ));
     }
 
-    public function searchGroup($id) {
+    public function searchGroup($id)
+    {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -124,7 +141,8 @@ class InterestCommunity extends CActiveRecord {
         ));
     }
 
-    public function getTombolJoin() {
+    public function getTombolJoin()
+    {
         $cek = InterestCommunityMember::model()->findAllByAttributes(array('id_user' => Yii::app()->user->id['id']));
         if ($cek != NULL)
             return CHtml::link('Visit', Yii::app()->createUrl('/group/interest/community', array('id' => $this->community_hash)), array('class' => 'btn btn-info btn-fill pull-right'));
@@ -138,7 +156,8 @@ class InterestCommunity extends CActiveRecord {
      * @param string $className active record class name.
      * @return InterestCommunity the static model class
      */
-    public static function model($className = __CLASS__) {
+    public static function model($className = __CLASS__)
+    {
         return parent::model($className);
     }
 

@@ -1,8 +1,9 @@
 <?php
 Yii::app()->clientScript->registerScript('find-list-interest', '
 		$(".navbar").removeClass("navbar-clear");
-		$("#Interest_interest_name").keyup(function(){
+		$("#InterestCommunity_community_name").keyup(function(){
 			var words = $(this).val();
+                        console.log("up");
 			$.fn.yiiListView.update("interest-list", {
 		        data: $("#search-interest").serialize()
 		    });
@@ -85,10 +86,7 @@ Yii::app()->clientScript->registerScript('find-list-interest', '
                     ?>	
                     <div class="form-row">
                         <div class="input-text">
-                            <?php
-                            echo $form->textField($community, 'community_name', array('placeholder' => 'What Your Interest?'));
-                            ?>
-                            <span class="search-icon"><i class="fa fa-search"></i></span>
+                            <?php echo $form->textField($community, 'community_name', array('placeholder' => 'What Your Interest?')); ?>
                         </div>
                     </div>
                     <?php $this->endWidget(); ?>

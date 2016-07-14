@@ -3,7 +3,7 @@
         <div class="text text-interest">
             <div style="width:100%;">
                 <label class="label-switch pull-right">
-                    <input type="checkbox" class="interest-switch" id="chek-interest-<?php echo $data->id ?>">
+                    <input type="checkbox" class="interest-switch" <?php echo ($data->isInterested) ? 'checked="checked"' : "" ?> id="chek-interest-<?php echo $data->id ?>">
                     <div class="checkbox"></div>
                 </label>
             </div>

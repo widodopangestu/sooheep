@@ -1124,8 +1124,8 @@ JS;
             var r = confirm('Attend to this event?');
             if (r == true) {
                 jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/interest/attend/id') . "/' + id, 'cache': false, 'success': function () {
+                        jQuery('#btn-attend-' + id)[0].remove();
                         jQuery('#btn-attend-' + id).remove();
-                        console.log(jQuery('#btn-attend-' + id));
                     }});
             }
             return false;
@@ -1134,8 +1134,8 @@ JS;
             var r = confirm('Cancel Attend to this event?');
             if (r == true) {
                 jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/interest/unattend/id') . "/' + id, 'cache': false, 'success': function () {
+                        jQuery('#btn-unattend-' + id)[0].remove();
                         jQuery('#btn-unattend-' + id).remove();
-                        console.log(jQuery('#btn-unattend-' + id));
                     }});
             }
             return false;
