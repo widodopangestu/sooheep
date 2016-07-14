@@ -1,24 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "user_interest".
+ * This is the model class for table "users_attend".
  *
- * The followings are the available columns in table 'user_interest':
- * @property integer $id_user_interst
- * @property integer $id_user
- * @property integer $id_interest
- *
- * The followings are the available model relations:
- * @property Interest $idInterest
+ * The followings are the available columns in table 'users_attend':
+ * @property integer $event_id
+ * @property integer $users_id_user
  */
-class UserInterest extends CActiveRecord
+class UsersAttend extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'user_interest';
+		return 'users_attend';
 	}
 
 	/**
@@ -29,11 +25,11 @@ class UserInterest extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id_user, id_interest', 'required'),
-			array('id_user, id_interest', 'numerical', 'integerOnly'=>true),
+			array('event_id, users_id_user', 'required'),
+			array('event_id, users_id_user', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_user_interst, id_user, id_interest', 'safe', 'on'=>'search'),
+			array('event_id, users_id_user', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,8 +41,6 @@ class UserInterest extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idInterest' => array(self::BELONGS_TO, 'Interest', 'id_interest'),
-			'idUsers' => array(self::BELONGS_TO, 'Users', 'id_users'),
 		);
 	}
 
@@ -56,14 +50,11 @@ class UserInterest extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id_user_interst' => 'Id User Interst',
-			'id_user' => 'Id User',
-			'id_interest' => 'Id Interest',
+			'event_id' => 'Event',
+			'users_id_user' => 'Users Id User',
 		);
 	}
-	
-	
-	
+
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
@@ -82,9 +73,8 @@ class UserInterest extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id_user_interst',$this->id_user_interst);
-		$criteria->compare('id_user',$this->id_user);
-		$criteria->compare('id_interest',$this->id_interest);
+		$criteria->compare('event_id',$this->event_id);
+		$criteria->compare('users_id_user',$this->users_id_user);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -95,7 +85,7 @@ class UserInterest extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return UserInterest the static model class
+	 * @return UsersAttend the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

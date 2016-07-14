@@ -18,6 +18,7 @@
  * @property integer $tag_id
  * @property integer $repost_id
  * @property integer $poll_id
+ * @property integer $event_id
  *
  * The followings are the available model relations:
  * @property Feeds $tag
@@ -25,6 +26,7 @@
  * @property Feeds $repost
  * @property Feeds[] $feeds1
  * @property Poll $poll
+ * @property Event $event
  * @property FeedsAttributes[] $feedsAttributes
  * @property FeedsComments[] $feedsComments
  * @property FeedsCommunity[] $feedsCommunities
@@ -54,6 +56,7 @@ class Feeds extends CActiveRecord {
     const TYPE_TAG_POST = 9;
     const TYPE_REPOST_POST = 10;
     const TYPE_POLL_POST = 11;
+    const TYPE_EVENT_POST = 12;
     const POST_USER = 1;
     const POST_GROUP = 2;
     const POST_COMMUNITY = 3;
@@ -71,7 +74,7 @@ class Feeds extends CActiveRecord {
         return array(
             array('id_user, text_caption, hash', 'required'),
             //array('images','file','types'=>'jpg,jpeg,gif,png','maxSize'=>10*1024*1024, 'on' => 'uploadImg'),
-            array('id_user, isDeleted, tag_id, repost_id, poll_id', 'numerical', 'integerOnly' => true),
+            array('id_user, isDeleted, tag_id, repost_id, poll_id, event_id', 'numerical', 'integerOnly' => true),
             array('update_date, hash, deleted_date, post_type, post_interest_id, post_community_id, type, filePath, fileName, location, tag_id, repost_id, jsonMention', 'safe'),
             array('file', 'file', 'types' => 'pdf, xls, xlsx, doc, docx, ppt, pptx, odt, ods, odp, zip, rar, txt, mp4, mp3, png, jpg, jpeg', 'allowEmpty' => true),
             // The following rule is used by search().
@@ -93,6 +96,7 @@ class Feeds extends CActiveRecord {
             'repost' => array(self::BELONGS_TO, 'Feeds', 'repost_id'),
             'repostFeeds' => array(self::HAS_MANY, 'Feeds', 'repost_id'),
             'poll' => array(self::BELONGS_TO, 'Poll', 'poll_id'),
+            'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
             'feedsAttributes' => array(self::HAS_ONE, 'FeedsAttributes', 'id_feeds'),
             'feedsCommunities' => array(self::HAS_MANY, 'FeedsCommunity', 'id_feeds'),
             'feedsComment' => array(self::HAS_MANY, 'FeedsComments', 'id_feeds', 'condition' => 'comment_deleted IS NULL AND blocked IS NULL'),
@@ -165,6 +169,9 @@ class Feeds extends CActiveRecord {
             case self::TYPE_POLL_POST:
                 $description = "Poll";
                 break;
+            case self::TYPE_EVENT_POST:
+                $description = "Event";
+                break;
         }
         return $description;
     }
@@ -209,14 +216,20 @@ class Feeds extends CActiveRecord {
         ));
     }
 
-    public function getAllGroupFeeds($interest) {
+    public function getAllGroupFeeds($interest, $type = null) {
         $criteria = new CDbCriteria;
-        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT user_interest.id_user FROM user_interest WHERE user_interest.id_interest = :idInterest)) AND t.post_type = :typePost AND t.post_interest_id = :idInterest';
+        $whereType = '';
+        if ($type != null) {
+            $criteria->join = 'join feeds_attributes fa on (t.id_feeds = fa.id_feeds)';
+            $whereType = ' AND fa.type = :type';
+        }
+        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT user_interest.id_user FROM user_interest WHERE user_interest.id_interest = :idInterest)) AND t.post_type = :typePost AND t.post_interest_id = :idInterest'. $whereType;
         $criteria->order = "t.created_date DESC";
         $criteria->params = array(
             ':id' => Yii::app()->user->id['id'],
             ':idInterest' => $interest,
-            ':typePost' => self::POST_GROUP
+            ':typePost' => self::POST_GROUP,
+            ':type' => $type
         );
 
         return new CActiveDataProvider($this, array(
@@ -224,14 +237,20 @@ class Feeds extends CActiveRecord {
         ));
     }
 
-    public function getAllCommunityFeeds($interest) {
+    public function getAllCommunityFeeds($interest, $type = null) {
         $criteria = new CDbCriteria;
-        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT interest_community_member.id_user FROM interest_community_member WHERE interest_community_member.id_interest_community = :idInterest)) AND t.post_type = :typePost AND t.post_community_id = :idInterest';
+        $whereType = '';
+        if ($type != null) {
+            $criteria->join = 'join feeds_attributes fa on (t.id_feeds = fa.id_feeds)';
+            $whereType = ' AND fa.type = :type';
+        }
+        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT interest_community_member.id_user FROM interest_community_member WHERE interest_community_member.id_interest_community = :idInterest)) AND t.post_type = :typePost AND t.post_community_id = :idInterest'. $whereType;
         $criteria->order = "t.created_date DESC";
         $criteria->params = array(
             ':id' => Yii::app()->user->id['id'],
             ':idInterest' => $interest,
-            ':typePost' => self::POST_COMMUNITY
+            ':typePost' => self::POST_COMMUNITY,
+            ':type' => $type
         );
 
         return new CActiveDataProvider($this, array(

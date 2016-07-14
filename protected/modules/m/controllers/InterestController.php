@@ -23,7 +23,7 @@ class InterestController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'addInterest', 'listInterest', 'join', 'joinCommunity', 'group', 'community', 'listCommunity'),
+                'actions' => array('index', 'addInterest', 'listInterest', 'join', 'joinCommunity', 'group', 'community', 'listCommunity', 'ajaxListEvent', 'attend', 'unattend'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -121,7 +121,7 @@ class InterestController extends Controller {
                     $interest = new InterestCommunityMember();
                     $interest->id_user = Yii::app()->user->id['id'];
                     $interest->id_interest_community = $_POST['id'];
-                    
+
                     if ($interest->save()) {
                         echo CJSON::encode(array('sukses' => "yes"));
                     } else {
@@ -176,6 +176,44 @@ class InterestController extends Controller {
         $this->render('community', array(
             'community' => $community
         ));
+    }
+
+    public function actionAjaxListEvent($time) {
+        if (!Yii::app()->request->isAjaxRequest) {
+            throw new CHttpException('403', 'Forbidden access.');
+        }
+        $date = date('Y-m-d', strtotime($time));
+        $events = Event::model()->findAll("date LIKE '%" . $date . "%'");
+        $this->renderPartial('_list_event', array(
+            'date' => $date,
+            'events' => $events
+        ));
+    }
+
+    public function actionAttend($id) {
+        if (!Yii::app()->request->isAjaxRequest) {
+            throw new CHttpException('403', 'Forbidden access.');
+        }
+        $model = new UsersAttend;
+        $model->event_id = $id;
+        $model->users_id_user = Yii::app()->user->id['id'];
+        $model->save();
+    }
+
+    public function actionUnattend($id) {
+        if (!Yii::app()->request->isAjaxRequest) {
+            throw new CHttpException('403', 'Forbidden access.');
+        }
+        $model = UsersAttend::model()->findByAttributes(array(
+            'event_id' => $id,
+            'users_id_user' => Yii::app()->user->id['id']
+        ));
+        $model->delete();
+    }
+
+    public function getEvent($date) {
+        $events = Event::model()->findAll("date LIKE '%" . $date->format('Y-m-d') . "%'");
+        return $events;
     }
 
     // Uncomment the following methods and override them if needed

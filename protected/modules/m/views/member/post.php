@@ -32,6 +32,9 @@
                         case Feeds::TYPE_POLL_POST:
                             $this->renderPartial('_poll_post', array('data' => $data));
                             break;
+                        case Feeds::TYPE_EVENT_POST:
+                            $this->renderPartial('_event_post', array('data' => $data));
+                            break;
                         default:
                             $this->renderPartial('_text_post', array('data' => $data));
                             break;

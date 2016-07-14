@@ -34,11 +34,36 @@ class FeedsController extends Controller {
         $interest = UserInterest::model()->findAllByAttributes(array('id_user' => $user['id']));
         $userS = Users::model()->findByPk($user['id']);
         $feed = new Feeds();
+
+        $interests = new InterestSubgroup('searchMobile');
+        $interests->unsetAttributes();
+
+        $crtIs = new CDbCriteria();
+        $crtIs->addInCondition('id', $userS->idInterest['subgroup']);
+
+        $interests->setDbCriteria($crtIs);
+        if (isset($_GET['InterestSubgroup'])) {
+            $interests->attributes = $_GET['InterestSubgroup'];
+        }
+
+        $subinterest = new Interest('searchMobile');
+        $subinterest->unsetAttributes();
+        $crtI = new CDbCriteria();
+        $crtI->addInCondition('id_interest', $userS->idInterest['interest']);
+
+        $subinterest->setDbCriteria($crtI);
+        if (isset($_GET['Interest'])) {
+            $subinterest->attributes = $_GET['Interest'];
+//            $subinterest->id_subgroup = $q;
+        }
+
         if ($userS->interest == null) {
             $this->redirect(Yii::app()->createUrl('/m/interest/addInterest'));
         } else {
             $this->render('index', array(
                 'interest' => $interest,
+                'interests' => $interests,
+                'subinterest' => $subinterest,
                 'feed' => $feed
             ));
         }
@@ -54,6 +79,7 @@ class FeedsController extends Controller {
 
     public function actionSetFeed() {
         if (isset($_POST['Feeds'])) {
+            $errors = array();
             $feed = new Feeds;
             if ($this->interest != null) {
                 $feed->post_interest_id = $this->interest->id_interest;
@@ -96,9 +122,22 @@ class FeedsController extends Controller {
                         $choice->poll_id = $poll->id;
                         $choice->save();
                     }
+                } else {
+                    foreach ($poll->getErrors() as $key => $error)
+                        $errors[$key] = $error[0];
                 }
             }
 
+            $event = new Event;
+            if (isset($_POST['Event'])) {
+                $event->attributes = $_POST['Event'];
+                if ($event->save()) {
+                    $feed->event_id = $event->id;
+                } else {
+                    foreach ($event->getErrors() as  $key => $error)
+                        $errors[$key] = $error[0];
+                }
+            }
             if ($feed->save()) {
                 if ($feed->post_interest_id != null) {
                     $this->redirect(Yii::app()->createUrl("/m/interest/group/q/" . $feed->post_interest_id));
@@ -108,9 +147,12 @@ class FeedsController extends Controller {
                     $this->redirect(array('index'));
                 }
             } else {
-                var_dump($feed->getErrors());
-                //$this->redirect(array('index'));
+                foreach ($feed->getErrors() as  $key => $error)
+                    $errors[$key] = $error[0];
             }
+            if (count($errors) > 0)
+                echo "<pre>";
+            print_r($errors);
         }
     }
 

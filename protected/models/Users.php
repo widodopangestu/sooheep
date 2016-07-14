@@ -51,6 +51,7 @@ class Users extends CActiveRecord {
         return array(
             'profiles' => array(self::HAS_ONE, 'Profile', 'id_user'),
             'idRoles' => array(self::BELONGS_TO, 'Role', 'id_roles'),
+            'userInterests' => array(self::HAS_MANY, 'UserInterest', 'id_user'),
         );
     }
 
@@ -129,6 +130,19 @@ class Users extends CActiveRecord {
             return Yii::app()->theme->baseUrl . "/images/baby-ant.png";
         else
             return str_replace('best', 'thumb', Yii::app()->request->baseUrl . $profile->image_path);
+    }
+
+    public function getIdInterest() {
+        $group = array();
+        $subgroup = array();
+        $interest = array();
+        foreach ($this->userInterests as $userInterest) {
+            $int = $userInterest->idInterest;
+            $group[] = $int->id_group;
+            $subgroup[] = $int->id_subgroup;
+            $interest[] = $int->id_interest;
+        }
+        return array('group' => $group, 'subgroup' => $subgroup, 'interest' => $interest);
     }
 
 }

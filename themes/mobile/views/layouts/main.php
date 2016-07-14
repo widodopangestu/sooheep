@@ -694,9 +694,83 @@ JS;
 
                     Yii::app()->clientScript->registerScript('pollHelp', $js, CClientScript::POS_END);
                     ?>
-<!--                    <style type="text/css">
-                  </style>
-                  <iframe src="http://localhost/sooheep/poll/poll/create"  frameBorder="0" onload="resizeIframe(this)" style="overflow: scroll; width:100%;"></iframe>-->
+                </div>
+                <div class="form-row">
+                    <div class="input-submit">
+                        <button type="submit" class="button button-big js-form-submit button-fill pull-right button-primary">Send</button>
+                    </div>
+                </div>
+                <?php $this->endWidget(); ?>
+            </div>	
+        </div>
+    </div>
+    <div class="popup popup-event">
+        <div class="content-block">
+            <a href="#" class="close-popup">
+                Close <i class="fa fa-close"></i>
+            </a>
+            <div class="img-post text-center mt-10">
+
+            </div>
+
+            <div class="forms">
+                <h3>What do you heep?</h3>
+                <?php
+                $feed = new Feeds();
+                $event = new Event();
+                $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+                    'id' => 'feeds-event',
+                    'type' => 'horizontal',
+                    'action' => CController::createUrl('/m/feeds/setFeed'),
+                    'htmlOptions' => array(
+                        //'enctype'=>'multipart/form-data'
+                        'class' => 'js-validate'
+                    )
+                ));
+                ?>
+                <div class="form-row">
+                    <div class="input-text">
+                        <?php
+                        if ($this->interest != null) {
+                            echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
+                        }
+                        if ($this->community != null) {
+                            echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
+                        }
+                        echo $form->hiddenField($feed, 'jsonMention');
+                        echo $form->hiddenField($feed, 'event_id');
+                        echo $form->hiddenField($feed, 'fileName');
+                        echo $form->hiddenField($feed, 'filePath');
+                        echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_EVENT_POST));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        ?>
+                    </div>
+                </div>
+                <div class="feeds-event-content"style="
+                     background: #fff;
+                     padding: 10px;
+                     border-radius: 5px;
+                     ">
+                    <table border="0">
+                        <tr>
+                            <td><?php echo $form->labelEx($event, 'title'); ?></td>
+                            <td><?php echo $form->textField($event, 'title', array('size' => 60, 'maxlength' => 255)); ?></td>
+                            <td><?php echo $form->error($event, 'title'); ?></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><?php echo $form->labelEx($event, 'description'); ?></td>
+                            <td><?php echo $form->textArea($event, 'description', array('rows' => 6, 'cols' => 50)); ?></td>
+                            <td><?php echo $form->error($event, 'description'); ?></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><?php echo $form->labelEx($event, 'place'); ?></td>
+                            <td><?php echo $form->textArea($event, 'place', array('rows' => 6, 'cols' => 50)); ?></td>
+                            <td><?php echo $form->error($event, 'place'); ?></td>
+                        </tr>
+                        <?php echo $form->hiddenField($event, 'date'); ?>
+                    </table>
                 </div>
                 <div class="form-row">
                     <div class="input-submit">
@@ -970,7 +1044,7 @@ JS;
             return false;
         }
             ", CClientScript::POS_END);
-    
+
     Yii::app()->clientScript->registerScript('form-validation', "
         
             $('#feeds-text').submit(function () {
@@ -1039,6 +1113,33 @@ JS;
             });
             ", CClientScript::POS_END);
     ?>
+    <script type="text/javascript">
+        function loadEvent(time) {
+            $('#feeds-event input[name=\"Event[date]\"]').val(time);
+            jQuery.ajax({'type': 'POST', 'url': '<?php echo Yii::app()->createUrl('/m/interest/ajaxListEvent/time') ?>/' + time, 'cache': false, 'success': function (html) {
+                    jQuery('#list-event').html(html);
+                }});
+            return false;
+        }
+        function attend(id) {
+            var r = confirm('Attend to this event?');
+            if (r == true) {
+                jQuery.ajax({'type': 'POST', 'url': '<?php echo Yii::app()->createUrl('/m/interest/attend/id') ?>/' + id, 'cache': false, 'success': function () {
+                        jQuery('#btn-attend-' + id).hide();
+                    }});
+            }
+            return false;
+        }
+        function unattend(id) {
+            var r = confirm('Cancel Attend to this event?');
+            if (r == true) {
+                jQuery.ajax({'type': 'POST', 'url': '<?php echo Yii::app()->createUrl('/m/interest/unattend/id') ?>/' + id, 'cache': false, 'success': function () {
+                        jQuery('#btn-unattend-' + id).hide();
+                    }});
+            }
+            return false;
+        }
+    </script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.fileupload.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/framework7/dist/js/framework7.min.js"></script>
