@@ -970,6 +970,74 @@ JS;
             return false;
         }
             ", CClientScript::POS_END);
+    
+    Yii::app()->clientScript->registerScript('form-validation', "
+        
+            $('#feeds-text').submit(function () {
+                var text = $.trim($('#feeds-text textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            $('#feeds-file').submit(function () {
+                var text = $.trim($('#feeds-file textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            $('#feeds-location').submit(function () {
+                var text = $.trim($('#feeds-location textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            $('#feeds-audio').submit(function () {
+                var text = $.trim($('#feeds-audio textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            $('#feeds-video').submit(function () {
+                var text = $.trim($('#feeds-video textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            $('#feeds-image').submit(function () {
+                var text = $.trim($('#feeds-image textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            $('#feeds-repost').submit(function () {
+                var text = $.trim($('#feeds-repost textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            $('#feeds-poll').submit(function () {
+                var text = $.trim($('#feeds-poll textarea.share-text').val());
+
+                if (text  === '') {
+                    alert('Share text is empty.');
+                    return false;
+                }
+            });
+            ", CClientScript::POS_END);
     ?>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.fileupload.js"></script>
