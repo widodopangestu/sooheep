@@ -161,4 +161,7 @@ class InterestCommunity extends CActiveRecord
         return parent::model($className);
     }
 
+    public function getLinkName() {
+        return CHtml::link('<span style="color:#bc5228;">' . $this->community_name . '</span>', array('interest/community', 'q' => $this->id));
+    }
 }

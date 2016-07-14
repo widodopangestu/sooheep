@@ -52,6 +52,7 @@ class Users extends CActiveRecord {
             'profiles' => array(self::HAS_ONE, 'Profile', 'id_user'),
             'idRoles' => array(self::BELONGS_TO, 'Role', 'id_roles'),
             'userInterests' => array(self::HAS_MANY, 'UserInterest', 'id_user'),
+            'userCommunities' => array(self::HAS_MANY, 'InterestCommunityMember', 'id_user'),
         );
     }
 
@@ -143,6 +144,28 @@ class Users extends CActiveRecord {
             $interest[] = $int->id_interest;
         }
         return array('group' => $group, 'subgroup' => $subgroup, 'interest' => $interest);
+    }
+
+    public function getIdCommunity() {
+        $com = array();
+        foreach ($this->userCommunities as $userCommunity) {
+            $com[] = $userCommunity->id_interest_community;
+        }
+        return $com;
+    }
+
+    public function getFriendsId() {
+        $sql = "SELECT friend.id_user_friend FROM friend WHERE friend.id_user = $this->id_user AND block = 0";
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        $fr = array();
+        foreach ($result as $res) {
+            $fr[] = $res['id_user_friend'];
+        }
+        return $fr;
+    }
+
+    public function getLinkFullName() {
+        return CHtml::link('<span style="color:#bc5228;">' . $this->profiles->firstname . ' ' . $this->profiles->lastname . '</span>', array('member/profile', 'q' => $this->hash));
     }
 
 }

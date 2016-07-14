@@ -184,7 +184,10 @@ class Feeds extends CActiveRecord {
         } else {
             if ($id == NULL) {
                 $id_user = intval(Yii::app()->user->id['id']);
-                $criteria->condition = '(t.tag_id <> null AND t.id_user <> :id) AND t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id';
+                $user = Users::model()->findByPk($id_user);
+                $community = implode(',', $user->idCommunity);
+                $interest = implode(',', $user->idInterest['interest']);
+                $criteria->condition = 't.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.post_community_id IN (' . $community . ') OR t.post_interest_id IN (' . $interest . ')';
             } else {
                 $id_user = intval($id);
                 $criteria->condition = 't.id_user = :id';
@@ -223,7 +226,7 @@ class Feeds extends CActiveRecord {
             $criteria->join = 'join feeds_attributes fa on (t.id_feeds = fa.id_feeds)';
             $whereType = ' AND fa.type = :type';
         }
-        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT user_interest.id_user FROM user_interest WHERE user_interest.id_interest = :idInterest)) AND t.post_type = :typePost AND t.post_interest_id = :idInterest'. $whereType;
+        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT user_interest.id_user FROM user_interest WHERE user_interest.id_interest = :idInterest)) AND t.post_type = :typePost AND t.post_interest_id = :idInterest' . $whereType;
         $criteria->order = "t.created_date DESC";
         $criteria->params = array(
             ':id' => Yii::app()->user->id['id'],
@@ -244,7 +247,7 @@ class Feeds extends CActiveRecord {
             $criteria->join = 'join feeds_attributes fa on (t.id_feeds = fa.id_feeds)';
             $whereType = ' AND fa.type = :type';
         }
-        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT interest_community_member.id_user FROM interest_community_member WHERE interest_community_member.id_interest_community = :idInterest)) AND t.post_type = :typePost AND t.post_community_id = :idInterest'. $whereType;
+        $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id OR t.id_user IN (SELECT interest_community_member.id_user FROM interest_community_member WHERE interest_community_member.id_interest_community = :idInterest)) AND t.post_type = :typePost AND t.post_community_id = :idInterest' . $whereType;
         $criteria->order = "t.created_date DESC";
         $criteria->params = array(
             ':id' => Yii::app()->user->id['id'],
@@ -362,6 +365,49 @@ class Feeds extends CActiveRecord {
             $res = $result['total'];
         }
         return $res;
+    }
+
+    public function getTypeText() {
+        $description = "Text";
+        switch ($this->type) {
+            case self::TYPE_ACTIVITY_POST:
+                $description = "Activity";
+                break;
+            case self::TYPE_LINK_POST:
+                $description = "Link";
+                break;
+            case self::TYPE_TEXT_POST:
+                $description = "Text";
+                break;
+            case self::TYPE_MUSIC_POST:
+                $description = "Music";
+                break;
+            case self::TYPE_FILE_POST:
+                $description = "File";
+                break;
+            case self::TYPE_IMAGE_POST:
+                $description = "Image";
+                break;
+            case self::TYPE_VIDEO_POST:
+                $description = "Video";
+                break;
+            case self::TYPE_LOCATION_POST:
+                $description = "Location";
+                break;
+            case self::TYPE_TAG_POST:
+                $description = "Tag";
+                break;
+            case self::TYPE_REPOST_POST:
+                $description = "Repost";
+                break;
+            case self::TYPE_POLL_POST:
+                $description = "Poll";
+                break;
+            case self::TYPE_EVENT_POST:
+                $description = "Event";
+                break;
+        }
+        return $description;
     }
 
 }
