@@ -91,7 +91,7 @@
                                     break;
                             }
                             ?>
-                            <small><?php echo $data->user->linkFullName ?> have posted <?php echo $data->typeText ?> in <?php echo $into; ?> <a href='#' id='hideshow-<?php echo $data->id_feeds ?>'><span style="color:#bc5228; text-decoration: underline;">See More ></span></a></small>
+                            <small><?php echo $data->user->linkFullName ?> have posted <?php echo $data->feedsAttributes->typeText ?> in <?php echo $into; ?> <a href='#' id='hideshow-<?php echo $data->id_feeds ?>'><span style="color:#bc5228; text-decoration: underline;">See More ></span></a></small>
                             <script type="text/javascript">
                                 jQuery(document).ready(function () {
                                     jQuery('#hideshow-<?php echo $data->id_feeds ?>').live('click', function (event) {

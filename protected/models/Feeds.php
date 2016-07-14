@@ -367,47 +367,4 @@ class Feeds extends CActiveRecord {
         return $res;
     }
 
-    public function getTypeText() {
-        $description = "Text";
-        switch ($this->type) {
-            case self::TYPE_ACTIVITY_POST:
-                $description = "Activity";
-                break;
-            case self::TYPE_LINK_POST:
-                $description = "Link";
-                break;
-            case self::TYPE_TEXT_POST:
-                $description = "Text";
-                break;
-            case self::TYPE_MUSIC_POST:
-                $description = "Music";
-                break;
-            case self::TYPE_FILE_POST:
-                $description = "File";
-                break;
-            case self::TYPE_IMAGE_POST:
-                $description = "Image";
-                break;
-            case self::TYPE_VIDEO_POST:
-                $description = "Video";
-                break;
-            case self::TYPE_LOCATION_POST:
-                $description = "Location";
-                break;
-            case self::TYPE_TAG_POST:
-                $description = "Tag";
-                break;
-            case self::TYPE_REPOST_POST:
-                $description = "Repost";
-                break;
-            case self::TYPE_POLL_POST:
-                $description = "Poll";
-                break;
-            case self::TYPE_EVENT_POST:
-                $description = "Event";
-                break;
-        }
-        return $description;
-    }
-
 }
