@@ -114,8 +114,18 @@ class Users extends CActiveRecord {
         return $interst = UserInterest::model()->findAllByAttributes(array('id_user' => $this->id_user));
     }
 
-    public function getFullName() {
-        return $this->profiles->firstname . " " . $this->profiles->lastname;
+    public function getFullName($id = null) {
+        if ($id != null) {
+            $user = self::model()->findByPk($id);
+            if ($user) {
+                $fullname = $user->profiles->firstname . " " . $user->profiles->lastname;
+                $fullname == " " ? $user->email : $fullname;
+            }
+        } else {
+            $fullname = $this->profiles->firstname . " " . $this->profiles->lastname;
+            $fullname == " " ? $this->email : $fullname ;
+        }
+        return $fullname;
     }
 
     public function getPictureUrl() {
@@ -159,10 +169,25 @@ class Users extends CActiveRecord {
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $fr = array();
         foreach ($result as $res) {
-            if(!in_array($res['id_user_friend'], $fr))
+            if (!in_array($res['id_user_friend'], $fr))
                 $fr[] = $res['id_user_friend'];
-            if(!in_array($res['id_user'], $fr))
+            if (!in_array($res['id_user'], $fr))
                 $fr[] = $res['id_user'];
+        }
+        return $fr;
+    }
+
+    public function getListFriendsChats() {
+        $sql = "SELECT friend.id_user_friend , friend.id_user FROM friend WHERE (friend.id_user = $this->id_user OR friend.id_user_friend = $this->id_user) AND block = 0";
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
+        $fr = array();
+        foreach ($result as $res) {
+            $name = '';
+            if (Yii::app()->user->id['id'] !== $res['id_user_friend'])
+                $name = $this->getFullName($res['id_user_friend']);
+            else
+                $name = $this->getFullName($res['id_user']);
+            $fr[$res['id_user_friend'] . '-' . $res['id_user']] = $name;
         }
         return $fr;
     }
