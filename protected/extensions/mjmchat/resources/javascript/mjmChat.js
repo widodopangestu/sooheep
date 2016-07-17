@@ -53,12 +53,12 @@ $(function()
 	});
 	
 	// Close room
-	/*$("#mjmChatRoomClose").click(function()
+	$("#mjmChatRoomClose").click(function()
 	{
 		$("#mjmChatRoom").animate({bottom: "-410px"}, 'fast');
 		mjmChatItemSeleted.removeClass('mjmChatRoomSelect');
 		mjmChatItemSeleted = null;
-	});*/
+	});
 	
 	// Miminize room
 	$("#mjmChatRoomMinimize, #mjmChatRoomTitle").click(function()

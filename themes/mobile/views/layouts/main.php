@@ -112,55 +112,53 @@
                     </div>
                 </div>
                 <?php echo $content; ?>
-                <div class="clear">
-                    <ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
-                        <li class="mfb-component__wrap">
-                            <a href="#" class="mfb-component__button--main">
-                                <i class="mfb-component__main-icon--resting ion-plus-round"></i>
-                                <i class="mfb-component__main-icon--active ion-close-round"></i>
-                            </a>
-                            <ul class="mfb-component__list">
-                                <?php if ($this->interest != null || $this->community != null) : ?>
-                                    <li>
-                                        <a data-popup=".popup-poll" href="#" data-mfb-label="Create Polling" class="mfb-component__button--child link open-popup">
-                                            <i class="mfb-component__child-icon ion-pie-graph"></i>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
+                <ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+                    <li class="mfb-component__wrap">
+                        <a href="#" class="mfb-component__button--main">
+                            <i class="mfb-component__main-icon--resting ion-plus-round"></i>
+                            <i class="mfb-component__main-icon--active ion-close-round"></i>
+                        </a>
+                        <ul class="mfb-component__list">
+                            <?php if ($this->interest != null || $this->community != null) : ?>
                                 <li>
-                                    <a data-popup=".popup-map" href="#" data-mfb-label="Share Location" class="mfb-component__button--child link open-popup">
-                                        <i class="mfb-component__child-icon ion-location"></i>
+                                    <a data-popup=".popup-poll" href="#" data-mfb-label="Create Polling" class="mfb-component__button--child link open-popup">
+                                        <i class="mfb-component__child-icon ion-pie-graph"></i>
                                     </a>
                                 </li>
-                                <li>
-                                    <a data-popup=".popup-file" href="#" data-mfb-label="Share File" class="mfb-component__button--child link open-popup">
-                                        <i class="mfb-component__child-icon ion-android-attach"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a data-popup=".popup-audio" href="#" data-mfb-label="Share Musics" class="mfb-component__button--child link open-popup">
-                                        <i class="mfb-component__child-icon ion-music-note"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a data-popup=".popup-video" href="#" data-mfb-label="Share Video" class="mfb-component__button--child link open-popup">
-                                        <i class="mfb-component__child-icon ion-videocamera"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a data-popup=".popup-image" href="#" data-mfb-label="Share Picture" class="mfb-component__button--child link open-popup">
-                                        <i class="mfb-component__child-icon ion-images"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a data-picker=".picker-social" href="#" data-mfb-label="Share Heap" class="mfb-component__button--child open-picker link">
-                                        <i class="mfb-component__child-icon ion-edit"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+                            <?php endif; ?>
+                            <li>
+                                <a data-popup=".popup-map" href="#" data-mfb-label="Share Location" class="mfb-component__button--child link open-popup">
+                                    <i class="mfb-component__child-icon ion-location"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-popup=".popup-file" href="#" data-mfb-label="Share File" class="mfb-component__button--child link open-popup">
+                                    <i class="mfb-component__child-icon ion-android-attach"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-popup=".popup-audio" href="#" data-mfb-label="Share Musics" class="mfb-component__button--child link open-popup">
+                                    <i class="mfb-component__child-icon ion-music-note"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-popup=".popup-video" href="#" data-mfb-label="Share Video" class="mfb-component__button--child link open-popup">
+                                    <i class="mfb-component__child-icon ion-videocamera"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-popup=".popup-image" href="#" data-mfb-label="Share Picture" class="mfb-component__button--child link open-popup">
+                                    <i class="mfb-component__child-icon ion-images"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-picker=".picker-social" href="#" data-mfb-label="Share Heap" class="mfb-component__button--child open-picker link">
+                                    <i class="mfb-component__child-icon ion-edit"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
                 <?php
                 $this->widget('MjmChat', array(
                     'title' => 'Chat room',
@@ -173,9 +171,9 @@
                 <!--                <div class="toolbar" style="background-color:#B7461A !important;opacity:0.6;">
                                     <div class="toolbar-inner">
                 <?php if ($this->interest != null || $this->community != null) : ?>
-                                                    <a data-popup=".popup-poll" class="link open-popup" href="#">
-                                                        <span class="fa fa-list-alt"></span>
-                                                    </a>
+                                                        <a data-popup=".popup-poll" class="link open-popup" href="#">
+                                                            <span class="fa fa-list-alt"></span>
+                                                        </a>
                 <?php endif; ?>
                                         <a data-popup=".popup-map"  class="link open-popup" href="#">
                                             <span class="fa fa-map-marker"></span>
