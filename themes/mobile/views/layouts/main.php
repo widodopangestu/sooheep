@@ -163,8 +163,8 @@
                 $this->widget('MjmChat', array(
                     'title' => 'Chat room',
                     'rooms' => $user->idUser->listFriendsChats, //array('php' => 'PHP Room', 'html' => 'HTML Room'),
-                    'host' => 'http://localhost',
-                    'port' => '3000',
+                    'host' => Yii::app()->params['chat_host'],
+                    'port' => Yii::app()->params['chat_port'],
                         )
                 );
                 ?>
