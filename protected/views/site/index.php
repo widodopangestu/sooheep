@@ -1,9 +1,10 @@
-<?php
-/* @var $this SiteController */
 
-$this->pageTitle=Yii::app()->name." - Pengumuman";
-?>
-<?php $this->widget('bootstrap.widgets.TbListView',array(
-	'dataProvider'=>$article,
-	'itemView'=>'_viewArticle',
-)); ?>
+    <?php
+    $this->widget('MjmChat', array(
+        'title' => 'Chat room',
+        'rooms' => array('php' => 'PHP Room', 'html' => 'HTML Room'),
+        'host' => 'http://localhost',
+        'port' => '3000',
+            )
+    );
+    ?>

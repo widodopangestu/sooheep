@@ -22,6 +22,8 @@
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/jquery.mentionsInput.css" id="theme-style">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/app.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/uploadfile.css">
+        <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/mfb.css">
+        <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/themes/town/style.css" id="theme-style">
         <!--<link rel="stylesheet" href="" id="theme-style">-->
         <style>
@@ -77,7 +79,6 @@
         </style>
     </head>
     <body>
-
         <div class="statusbar-overlay"></div>
         <div class="panel-overlay"></div>
 
@@ -110,38 +111,93 @@
                         </div>
                     </div>
                 </div>
-
                 <?php echo $content; ?>
-
-
-                <div class="toolbar" style="background-color:#B7461A !important;opacity:0.6;">
-                    <div class="toolbar-inner">
-                        <?php if ($this->interest != null || $this->community != null) : ?>
-                            <a data-popup=".popup-poll" class="link open-popup" href="#">
-                                <span class="fa fa-list-alt"></span>
+                <div class="clear">
+                    <ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+                        <li class="mfb-component__wrap">
+                            <a href="#" class="mfb-component__button--main">
+                                <i class="mfb-component__main-icon--resting ion-plus-round"></i>
+                                <i class="mfb-component__main-icon--active ion-close-round"></i>
                             </a>
-                        <?php endif; ?>
-                        <a data-popup=".popup-map"  class="link open-popup" href="#">
-                            <span class="fa fa-map-marker"></span>
-                        </a> 
-                        <a data-popup=".popup-file" class="link open-popup" href="#">
-                            <span class="fa fa-file"></span>
-                        </a> 
-                        <a data-popup=".popup-audio" class="link open-popup" href="#">
-                            <span class="fa fa-music"></span>
-                        </a> 
-                        <a data-popup=".popup-video" class="link open-popup" href="#">
-                            <span class="fa fa-video-camera"></span>
-                        </a> 
-                        <a data-popup=".popup-image" class="link open-popup" href="#">
-                            <span class="fa fa-picture-o"></span>
-                        </a>
-
-                        <a class="open-picker link" data-picker=".picker-social" href="#">
-                            <span class="icon-pencil-line"></span>
-                        </a> 
-                    </div>
+                            <ul class="mfb-component__list">
+                                <?php if ($this->interest != null || $this->community != null) : ?>
+                                    <li>
+                                        <a data-popup=".popup-poll" href="#" data-mfb-label="Create Polling" class="mfb-component__button--child link open-popup">
+                                            <i class="mfb-component__child-icon ion-pie-graph"></i>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                                <li>
+                                    <a data-popup=".popup-map" href="#" data-mfb-label="Share Location" class="mfb-component__button--child link open-popup">
+                                        <i class="mfb-component__child-icon ion-location"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-popup=".popup-file" href="#" data-mfb-label="Share File" class="mfb-component__button--child link open-popup">
+                                        <i class="mfb-component__child-icon ion-android-attach"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-popup=".popup-audio" href="#" data-mfb-label="Share Musics" class="mfb-component__button--child link open-popup">
+                                        <i class="mfb-component__child-icon ion-music-note"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-popup=".popup-video" href="#" data-mfb-label="Share Video" class="mfb-component__button--child link open-popup">
+                                        <i class="mfb-component__child-icon ion-videocamera"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-popup=".popup-image" href="#" data-mfb-label="Share Picture" class="mfb-component__button--child link open-popup">
+                                        <i class="mfb-component__child-icon ion-images"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-picker=".picker-social" href="#" data-mfb-label="Share Heap" class="mfb-component__button--child open-picker link">
+                                        <i class="mfb-component__child-icon ion-edit"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
+                <?php
+                $this->widget('MjmChat', array(
+                    'title' => 'Chat room',
+                    'rooms' => array('php' => 'PHP Room', 'html' => 'HTML Room'),
+                    'host' => 'http://localhost',
+                    'port' => '3000',
+                        )
+                );
+                ?>
+                <!--                <div class="toolbar" style="background-color:#B7461A !important;opacity:0.6;">
+                                    <div class="toolbar-inner">
+                <?php if ($this->interest != null || $this->community != null) : ?>
+                                                    <a data-popup=".popup-poll" class="link open-popup" href="#">
+                                                        <span class="fa fa-list-alt"></span>
+                                                    </a>
+                <?php endif; ?>
+                                        <a data-popup=".popup-map"  class="link open-popup" href="#">
+                                            <span class="fa fa-map-marker"></span>
+                                        </a> 
+                                        <a data-popup=".popup-file" class="link open-popup" href="#">
+                                            <span class="fa fa-file"></span>
+                                        </a> 
+                                        <a data-popup=".popup-audio" class="link open-popup" href="#">
+                                            <span class="fa fa-music"></span>
+                                        </a> 
+                                        <a data-popup=".popup-video" class="link open-popup" href="#">
+                                            <span class="fa fa-video-camera"></span>
+                                        </a> 
+                                        <a data-popup=".popup-image" class="link open-popup" href="#">
+                                            <span class="fa fa-picture-o"></span>
+                                        </a>
+                
+                                        <a class="open-picker link" data-picker=".picker-social" href="#">
+                                            <span class="icon-pencil-line"></span>
+                                        </a> 
+                                    </div>
+                                </div>-->
             </div>
         </div>
 
@@ -833,7 +889,6 @@ JS;
             </div>
         </div>
     </div>
-
     <?php
     Yii::app()->clientScript->registerCoreScript('jquery', CClientScript::POS_END);
     Yii::app()->clientScript->registerCoreScript('jquery-ui', CClientScript::POS_END);
@@ -1159,6 +1214,7 @@ JS;
     <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.elastic.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/underscore-min.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.mentionsInput.js"></script>
+    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/mfb.min.js"></script>
     <script>
         // This example requires the Places library. Include the libraries=places
         // parameter when you first load the API. For example:

@@ -31,15 +31,7 @@ class SiteController extends Controller
 	{
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
-		$article = new CActiveDataProvider('Article',array(
-			'criteria' =>array(
-				'order' => 'created_date DESC'
-			),
-			'pagination' => array(
-				'pageSize' => 15
-			)
-		));
-		$this->render('index',array('article'=>$article));
+		$this->render('index');
 	}
 	
 	public function actionArticle($id,$slug){
