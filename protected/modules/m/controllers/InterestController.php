@@ -1,6 +1,7 @@
 <?php
 
-class InterestController extends Controller {
+class InterestController extends Controller
+{
 
     public $layout = '//layouts/main';
     public $defaultAction = 'addInterest';
@@ -10,20 +11,22 @@ class InterestController extends Controller {
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function filters() {
+    public function filters()
+    {
         return array(
             'accessControl', // perform access control for CRUD operations
         );
     }
 
-    public function accessRules() {
+    public function accessRules()
+    {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('searchInterest'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'addInterest', 'listInterest', 'join', 'joinCommunity', 'group', 'community', 'listCommunity', 'ajaxListEvent', 'attend', 'unattend'),
+                'actions' => array('index', 'addInterest', 'listInterest', 'join', 'joinCommunity', 'group', 'community', 'listCommunity', 'ajaxListEvent', 'attend', 'unattend', 'map', 'showMap'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -32,7 +35,8 @@ class InterestController extends Controller {
         );
     }
 
-    public function actionAddInterest() {
+    public function actionAddInterest()
+    {
         $interest = new InterestSubgroup('searchMobile');
 
         if (isset($_GET['InterestSubgroup'])) {
@@ -45,7 +49,8 @@ class InterestController extends Controller {
         ));
     }
 
-    public function actionGroup($q) {
+    public function actionGroup($q)
+    {
         $user = Yii::app()->user->id;
         $userS = Users::model()->findByPk($user['id']);
         $feed = new Feeds();
@@ -58,7 +63,8 @@ class InterestController extends Controller {
         ));
     }
 
-    public function actionCommunity($q) {
+    public function actionCommunity($q)
+    {
         $user = Yii::app()->user->id;
         $userS = Users::model()->findByPk($user['id']);
         $feed = new Feeds();
@@ -71,7 +77,8 @@ class InterestController extends Controller {
         ));
     }
 
-    public function actionJoin($q) {
+    public function actionJoin($q)
+    {
         if (isset($_POST['id'])) {
             if ($q == "join") {
                 $cek = UserInterest::model()->findByAttributes(array(
@@ -110,7 +117,8 @@ class InterestController extends Controller {
         }
     }
 
-    public function actionJoinCommunity($q) {
+    public function actionJoinCommunity($q)
+    {
         if (isset($_POST['id'])) {
             $ic = InterestCommunity::model()->findByPk($_POST['id']);
             if ($q == "join" && $ic !== null) {
@@ -154,7 +162,8 @@ class InterestController extends Controller {
         }
     }
 
-    public function actionListInterest($q) {
+    public function actionListInterest($q)
+    {
         $interest = new Interest('searchMobile');
         $interest->id_subgroup = $q;
 
@@ -169,7 +178,8 @@ class InterestController extends Controller {
         ));
     }
 
-    public function actionListCommunity() {
+    public function actionListCommunity()
+    {
         $community = new InterestCommunity('search');
 
         if (isset($_GET['InterestCommunity'])) {
@@ -182,7 +192,8 @@ class InterestController extends Controller {
         ));
     }
 
-    public function actionAjaxListEvent($time) {
+    public function actionAjaxListEvent($time)
+    {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -194,7 +205,8 @@ class InterestController extends Controller {
         ));
     }
 
-    public function actionAttend($id) {
+    public function actionAttend($id)
+    {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -204,7 +216,8 @@ class InterestController extends Controller {
         $model->save();
     }
 
-    public function actionUnattend($id) {
+    public function actionUnattend($id)
+    {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -215,9 +228,25 @@ class InterestController extends Controller {
         $model->delete();
     }
 
-    public function getEvent($date) {
+    public function getEvent($date)
+    {
         $events = Event::model()->findAll("date LIKE '%" . $date->format('Y-m-d') . "%'");
         return $events;
+    }
+
+    public function actionMap()
+    {
+        $this->layout = '//layouts/map';
+        $this->render('map');
+    }
+
+    public function actionShowMap($lat = -6.202393600000001, $lng = 106.65270989999999)
+    {
+        $this->layout = '//layouts/map';
+        $this->render('showMap', array(
+            'lat' => $lat,
+            'lng' => $lng
+        ));
     }
 
     // Uncomment the following methods and override them if needed
