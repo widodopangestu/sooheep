@@ -821,6 +821,19 @@ JS;
             </div>	
         </div>
     </div>
+    <div class="popup popup-comments">
+        <div class="content-block">
+            <a href="#" class="close-popup">
+                Close <i class="fa fa-close"></i>
+            </a>
+            <div class="img-post text-center mt-10">
+
+            </div>
+            <table border="0" id="all-comment" style="padding-left: 0;" id="list-comment-<?php echo $data->id_feeds ?>">
+            </table>
+            </div>	
+        </div>
+    </div>
     <!-- Picker -->
     <div class="picker-modal picker-social">
         <div class="toolbar">
@@ -1068,6 +1081,7 @@ JS;
             if (r == true) {
                 jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/feeds/ajaxDeleteComment/id') . "/' + id + '/type/' + s, 'cache': false, 'success': function (html) {
                         jQuery('#comment-' + id).remove();
+                        jQuery('#comment-t-' + id).remove();
                         jQuery('#comment-count-' + html).html(jQuery('#list-comment-' + html + ' li').size());
                     }});
             }
@@ -1079,6 +1093,13 @@ JS;
                     jQuery('#list-comment-' + id).append(html);
                     jQuery('#comment-count-' + id).html(jQuery('#list-comment-' + id + ' li').size());
                     jQuery('#comment-form-' + id + ' textarea').val('');
+                }});
+            return false;
+        }
+        
+        function loadComments(id) {
+            jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/feeds/ajaxLoadComments/id') . "/' + id, 'cache': false, 'success': function (html) {
+                    jQuery('#all-comment').html(html);
                 }});
             return false;
         }

@@ -20,7 +20,7 @@ class FeedsController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention', 'ajaxListComments', 'ajaxNewComment', 'ajaxDeleteComment'),
+                'actions' => array('index', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention', 'ajaxListComments', 'ajaxNewComment', 'ajaxDeleteComment', 'ajaxLoadComments'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -330,6 +330,18 @@ class FeedsController extends Controller {
             }
             $comment->save(false);
             echo $comment->id_feeds;
+        }
+    }
+    public function actionAjaxLoadComments($id) {
+        if (!Yii::app()->request->isAjaxRequest) {
+            throw new CHttpException('403', 'Forbidden access.');
+        }
+        $feed = Feeds::model()->findByPk($id);
+
+        if ($feed != null) {
+            $this->renderPartial('/comments/_comments_popup', array(
+                                        'comments' => $feed->feedsComment,
+                                    ));
         }
     }
 

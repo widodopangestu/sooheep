@@ -61,11 +61,18 @@
                              margin-right: 10px;
                              background: #f7f7f8;
                              ">
+                                 <?php if ($data->feedsCommentCount > 3): ?>
+                                <a data-popup=".popup-comments" onclick="loadComments(<?php echo $data->id_feeds ?>);" class="link open-popup" href="#">
+                                    <span style="color: #bc5228;">Load more comments ...</span>
+                                </a> 
+                            <?php endif; ?>
                             <ul style="padding-left: 0;" id="list-comment-<?php echo $data->id_feeds ?>">
                                 <?php if ($data->feedsCommentCount >= 1): ?>
                                     <?php
+                                    $cr = new CDbCriteria();
+                                    $cr->limit = 3;
                                     $this->renderPartial('/comments/_comments', array(
-                                        'comments' => $data->feedsComment,
+                                        'comments' => $data->feedsComment($cr),
                                     ));
                                     ?>
                                 <?php endif; ?>
