@@ -1,28 +1,28 @@
 #mjmChatBlock {
-	position: fixed;
-	top: 50px;
-	left: 0;
+    position: fixed;
+    top: 50px;
+    left: 0;
 }
 #mjmChatIcon
 {
-	background: url("../images/mjmChatIcon.png") no-repeat scroll 130px center #FFFFFF;
-	border-right: 3px solid #C9E0ED;
-	box-shadow: -2px 0 4px -2px;
-	cursor: pointer;
-	font-family: tahoma;
-	font-size: 13px;
-	font-weight: bold;
-	height: 30px;
-	margin-left: -124px;
-	width: 160px;
+    background: url("../images/mjmChatIcon.png") no-repeat scroll 130px center #FFFFFF;
+    border-right: 3px solid #C9E0ED;
+    box-shadow: -2px 0 4px -2px;
+    cursor: pointer;
+    font-family: tahoma;
+    font-size: 13px;
+    font-weight: bold;
+    height: 30px;
+    margin-left: -124px;
+    width: 160px;
 }
 #mjmChatSlectRoom {
-	display: block;
-	margin-right: 36px;
-	padding: 6px 0 7px 10px;
+    display: block;
+    margin-right: 36px;
+    padding: 6px 0 7px 10px;
 }
 /*#mjmChatRooms {
-	display: none;
+        display: none;
     background-color: #FFFFFF;
     border-right: 3px solid #C9E0ED;
     box-shadow: -2px 1px 5px -2px;
@@ -39,23 +39,23 @@
     font-family: tahoma;
 }
 #mjmChatRooms li:hover {
-	background-color: #C9E0ED;
+        background-color: #C9E0ED;
 }*/
 #mjmChatRoom {
-	width: 600px;
-	height: 400px;
-	bottom: -410px;
+    width: 600px;
+    height: 400px;
+    bottom: -410px;
     box-shadow: 1px -1px 6px -1px;
     background-color: #FFFFFF;
-	position: fixed;
-	left: 0;
+    position: fixed;
+    left: 0;
 }
 .mjmChatRoomSelect {
-	cursor: default !important;
-	font-weight: bold;
+    cursor: default !important;
+    font-weight: bold;
 }
 .mjmChatRoomSelect:hover {
-	background-color: #FFF !important;	
+    background-color: #FFF !important;	
 }
 #mjmChatRoomHead {
     background-color: #C9E0ED;
@@ -63,7 +63,7 @@
     height: 20px;
     width: 100%;
     font-family: tahoma;
-	font-weight: bold;
+    font-weight: bold;
 }
 #mjmChatRoomClose, #mjmChatRoomMinimize {
     cursor: pointer;
@@ -115,7 +115,7 @@
     margin: 2px 8px;
 }
 #mjmChatMessages li strong {
-	color: silver;
+    color: silver;
 }
 #mjmChatRoomSend {
     height: 40px;
@@ -136,10 +136,16 @@
     width: 50px;
 }
 .mjmChatEvent, .mjmChatMyUser {
-	color: silver;	
+    color: silver;	
 }
 .mjmChatEvent {
     font-family: tahoma;
     font-size: 11px;
     font-style: italic;	
+}
+.mjmChatDate {
+    font-family: tahoma;
+    font-size: 11px;
+    color: silver;	
+    float: right;
 }

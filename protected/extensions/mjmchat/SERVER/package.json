@@ -5,6 +5,7 @@
   "main": "app.js",
   "author": "Mohammad Javad Masoudian (MJM)",
   "dependencies" : {
-    "socket.io": ""
+    "socket.io": "",
+    "mysql": "^2.5.4"
   }
 }
