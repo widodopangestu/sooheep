@@ -21,7 +21,7 @@
 	margin-right: 36px;
 	padding: 6px 0 7px 10px;
 }
-#mjmChatRooms {
+/*#mjmChatRooms {
 	display: none;
     background-color: #FFFFFF;
     border-right: 3px solid #C9E0ED;
@@ -40,7 +40,7 @@
 }
 #mjmChatRooms li:hover {
 	background-color: #C9E0ED;
-}
+}*/
 #mjmChatRoom {
 	width: 600px;
 	height: 400px;

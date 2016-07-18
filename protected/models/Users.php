@@ -123,7 +123,7 @@ class Users extends CActiveRecord {
             }
         } else {
             $fullname = $this->profiles->firstname . " " . $this->profiles->lastname;
-            $fullname == " " ? $this->email : $fullname ;
+            $fullname == " " ? $this->email : $fullname;
         }
         return $fullname;
     }
@@ -177,7 +177,7 @@ class Users extends CActiveRecord {
         return $fr;
     }
 
-    public function getListFriendsChats() {
+    public function getListFriendChats() {
         $sql = "SELECT friend.id_user_friend , friend.id_user FROM friend WHERE (friend.id_user = $this->id_user OR friend.id_user_friend = $this->id_user) AND block = 0";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $fr = array();
@@ -190,6 +190,22 @@ class Users extends CActiveRecord {
             $fr[$res['id_user_friend'] . '-' . $res['id_user']] = $name;
         }
         return $fr;
+    }
+
+    public function getListGroupChats() {
+        $interest = array();
+        foreach ($this->userInterests as $userInterest) {
+            $interest['chat-gr-' . $userInterest->idInterest->id_interest] = $userInterest->idInterest->interest_name;
+        }
+        return $interest;
+    }
+
+    public function getListCommunityChats() {
+        $com = array();
+        foreach ($this->userCommunities as $userCommunity) {
+            $com['chat-comm-' . $userCommunity->idInterestComunity->id] = $userCommunity->idInterestComunity->community_name;
+        }
+        return $com;
     }
 
     public function getLinkFullName() {

@@ -1,4 +1,4 @@
-<div id="mjmChatBlock">
+<!--<div id="mjmChatBlock">
 	<div id="mjmChatIcon" title="Open chatroom">
 		<span id="mjmChatSlectRoom"><?php echo $title; ?></span>
 	</div>
@@ -9,7 +9,7 @@
 		}
 		?>
 	</ul>
-</div>
+</div>-->
 <div id="mjmChatRoom">
 	<div id="mjmChatRoomHead">
 		<span id="mjmChatRoomTitle" title="Minimize"></span>

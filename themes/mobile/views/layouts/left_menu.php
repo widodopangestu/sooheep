@@ -1,6 +1,6 @@
 <!-- Left panel -->
 <div class="panel panel-left panel-reveal">
-    <!--<div class="user-banner" style=" background: transparent url('<?php //echo $this->getBackgroundPicture(true);   ?>') no-repeat scroll center top / cover ;">-->
+    <!--<div class="user-banner" style=" background: transparent url('<?php //echo $this->getBackgroundPicture(true);        ?>') no-repeat scroll center top / cover ;">-->
     <div class="user-banner">
         <span class="ava-box">
             <?php echo $this->getProfilePicture(); ?>
@@ -172,10 +172,27 @@
                             <div class="item-inner">
                                 <div class="item-title mylist">Group Chat</div>
                                 <div class="item-after">
-                                    <span class="badge badge-secondary">5</span>
+                                    <span class="badge badge-secondary"><?php echo count($user->idUser->listGroupChats);?></span>
                                 </div>
                             </div>
                         </a>
+                        <?php if ($user->idUser->listGroupChats > 0): ?>
+                            <a href="#" class="js-toggle-menu"><span class="icon-chevron-down"></span></a>
+                            <ul id="mjmChatRooms">
+                                <?php foreach ($user->idUser->listGroupChats as $roomKey => $roomValue): ?>
+                                    <li title="<?php echo $roomKey; ?>">
+                                        <a href="#" class="item-link close-panel item-content">
+                                            <div class="item-media">
+                                                <i class="fa fa-caret-right"></i>
+                                            </div>
+                                            <div class="item-inner">
+                                                <div class="item-title mylist"><?php echo $roomValue; ?></div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
                     </li>
                     <li>
                         <a href="#" class="item-link close-panel item-content">
@@ -185,10 +202,27 @@
                             <div class="item-inner">
                                 <div class="item-title mylist">Community Chat</div>
                                 <div class="item-after">
-                                    <span class="badge badge-secondary">5</span>
+                                    <span class="badge badge-secondary"><?php echo count($user->idUser->listCommunityChats);?></span>
                                 </div>
                             </div>
                         </a>
+                        <?php if ($user->idUser->listCommunityChats > 0): ?>
+                            <a href="#" class="js-toggle-menu"><span class="icon-chevron-down"></span></a>
+                            <ul id="mjmChatRooms">
+                                <?php foreach ($user->idUser->listCommunityChats as $roomKey => $roomValue): ?>
+                                    <li title="<?php echo $roomKey; ?>">
+                                        <a href="#" class="item-link close-panel item-content">
+                                            <div class="item-media">
+                                                <i class="fa fa-caret-right"></i>
+                                            </div>
+                                            <div class="item-inner">
+                                                <div class="item-title mylist"><?php echo $roomValue; ?></div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
                     </li>
                     <li>
                         <a href="#" class="item-link close-panel item-content">
@@ -198,10 +232,27 @@
                             <div class="item-inner">
                                 <div class="item-title mylist">Personal Chat</div>
                                 <div class="item-after">
-                                    <span class="badge badge-secondary">5</span>
+                                    <span class="badge badge-secondary"><?php echo count($user->idUser->listFriendChats);?></span>
                                 </div>
                             </div>
                         </a>
+                        <?php if ($user->idUser->listFriendChats > 0): ?>
+                            <a href="#" class="js-toggle-menu"><span class="icon-chevron-down"></span></a>
+                            <ul id="mjmChatRooms">
+                                <?php foreach ($user->idUser->listFriendChats as $roomKey => $roomValue): ?>
+                                    <li title="<?php echo $roomKey; ?>">
+                                        <a href="#" class="item-link close-panel item-content">
+                                            <div class="item-media">
+                                                <i class="fa fa-caret-right"></i>
+                                            </div>
+                                            <div class="item-inner">
+                                                <div class="item-title mylist"><?php echo $roomValue; ?></div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
                     </li>
                 </ul>
             </nav>

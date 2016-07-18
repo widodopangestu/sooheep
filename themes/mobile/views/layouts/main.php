@@ -162,7 +162,7 @@
                 <?php
                 $this->widget('MjmChat', array(
                     'title' => 'Chat room',
-                    'rooms' => $user->idUser->listFriendsChats, //array('php' => 'PHP Room', 'html' => 'HTML Room'),
+                    //'rooms' => $user->idUser->listFriendChats, //array('php' => 'PHP Room', 'html' => 'HTML Room'),
                     'host' => Yii::app()->params['chat_host'],
                     'port' => Yii::app()->params['chat_port'],
                         )
