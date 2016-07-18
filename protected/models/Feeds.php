@@ -190,8 +190,8 @@ class Feeds extends CActiveRecord {
                 $fried = implode(',', $user->friendsId);
                 count($user->idCommunity) ? $whereCom = ' OR t.post_community_id IN (' . $community . ')' : $whereCom = '';
                 count($user->idInterest['interest']) ? $whereInt = ' OR t.post_interest_id IN (' . $interest . ')' : $whereInt = '';
-                count($user->friendsId) ? $whereFr = 't.id_user IN (' . $fried . ') ' : $whereFr = '';
-                $criteria->condition = $whereFr . 'OR t.id_user = :id' . $whereCom . $whereInt;
+                count($user->friendsId) ? $whereFr = ' OR t.id_user IN (' . $fried . ') ' : $whereFr = '';
+                $criteria->condition = 't.id_user = :id' . $whereFr . $whereCom . $whereInt;
             } else {
                 $id_user = intval($id);
                 $criteria->condition = 't.id_user = :id';

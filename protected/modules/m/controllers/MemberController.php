@@ -57,9 +57,9 @@ class MemberController extends Controller {
     public function actionSignup() {
         $this->layout = '//layouts/login';
         $formLog = new LoginForm;
+        $formReg = new RegisterForm("step1");
         if (isset($_POST['step1'])) {
             if (isset($_POST['RegisterForm'])) {
-                $formReg = new RegisterForm("step1");
                 $formReg->attributes = $_POST['RegisterForm'];
 
                 //$this->performAjaxValidation($formReg);
