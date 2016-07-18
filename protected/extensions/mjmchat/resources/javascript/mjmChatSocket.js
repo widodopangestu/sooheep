@@ -61,7 +61,7 @@ $(function () {
         if (e.which == 13) {
             $('#mjmChatSend').focus().click();
             e.preventDefault();
-        }
+        } 
     });
 
     function mjmChatScrollDown()

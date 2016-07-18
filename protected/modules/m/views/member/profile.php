@@ -70,6 +70,9 @@ if (Yii::app()->user->hasFlash("pesan-add-sukses")) {
                                             <div class="feeds-content-<?php echo $data->id_feeds ?>">
                                                 <?php
                                                 switch ($data->feedsAttributes->type) {
+                                                    case Feeds::TYPE_LOCATION_POST:
+                                                        $this->renderPartial('_location_post', array('data' => $data));
+                                                        break;
                                                     case Feeds::TYPE_FILE_POST:
                                                         $this->renderPartial('_file_post', array('data' => $data));
                                                         break;

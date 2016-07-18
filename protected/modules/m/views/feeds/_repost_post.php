@@ -20,6 +20,9 @@ switch ($data->post_type) {
         <?php
         $repost = $data->repost;
         switch ($repost->feedsAttributes->type) {
+            case Feeds::TYPE_LOCATION_POST:
+                $this->renderPartial('_location_post', array('data' => $repost));
+                break;
             case Feeds::TYPE_FILE_POST:
                 $this->renderPartial('_file_post', array('data' => $repost));
                 break;
@@ -40,6 +43,9 @@ switch ($data->post_type) {
                 break;
             case Feeds::TYPE_POLL_POST:
                 $this->renderPartial('_poll_post', array('data' => $repost));
+                break;
+            case Feeds::TYPE_EVENT_POST:
+                $this->renderPartial('_event_post', array('data' => $repost));
                 break;
             default:
                 $this->renderPartial('_text_post', array('data' => $repost));

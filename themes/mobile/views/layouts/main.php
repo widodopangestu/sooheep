@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <?php echo $content; ?>
-                <ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+                <ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="click">
                     <li class="mfb-component__wrap">
                         <a href="#" class="mfb-component__button--main">
                             <i class="mfb-component__main-icon--resting ion-plus-round"></i>
