@@ -104,8 +104,40 @@ if (Yii::app()->user->hasFlash("pesan-add-sukses")) {
                                                 ?>
                                             </div>
                                             <a data-popup=".popup-repost" onclick="loadFeeds($(this));" class="link open-popup text" href="#" id="<?php echo $data->id_feeds ?>">
-                                                <span class="fa fa-retweet"style="color: #bc5228;"></span>
+                                                <span class="fa fa-retweet"style="color: #bc5228;"> <?php echo $data->countRepost; ?> repost(s)</span>
                                             </a> 
+                                            <a class="link text" href="#" id="<?php echo $data->id_feeds ?>">
+                                                <span class="fa fa-comment"style="color: #bc5228;"> <span id="comment-count-<?php echo $data->id_feeds ?>"><?php echo $data->feedsCommentCount; ?></span> comment(s)</span>
+                                            </a> 
+                                            <div id="comments-<?php echo $data->id_feeds ?>" style="
+                                                 margin-left: 80px;
+                                                 margin-right: 10px;
+                                                 background: #f7f7f8;
+                                                 "><?php if ($data->feedsCommentCount > 3): ?>
+                                                    <a data-popup=".popup-comments" onclick="loadComments(<?php echo $data->id_feeds ?>);" class="link open-popup" href="#">
+                                                        <span style="color: #bc5228;">Load more comments ...</span>
+                                                    </a> 
+                                                <?php endif; ?>
+                                                <ul style="padding-left: 0;" id="list-comment-<?php echo $data->id_feeds ?>">
+                                                    <?php if ($data->feedsCommentCount >= 1): ?>
+                                                        <?php
+                                                        $cr = new CDbCriteria();
+                                                        $cr->limit = 3;
+                                                        $this->renderPartial('/comments/_comments', array(
+                                                            'comments' => $data->feedsComment($cr),
+                                                        ));
+                                                        ?>
+                                                    <?php endif; ?>
+                                                </ul>
+                                                <div class="form-comment">
+                                                    <?php
+                                                    $this->renderPartial('/comments/_comment_form', array(
+                                                        'model' => new FeedsComments(),
+                                                        'id_feeds' => $data->id_feeds
+                                                    ));
+                                                    ?>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
