@@ -1079,19 +1079,19 @@ JS;
             else
                 var r = confirm('Block this comment?');
             if (r == true) {
-                jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/feeds/ajaxDeleteComment/id') . "/' + id + '/type/' + s, 'cache': false, 'success': function (html) {
+                jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/feeds/ajaxDeleteComment/id') . "/' + id + '/type/' + s, 'cache': false, dataType: 'json', 'success': function (data) {
                         jQuery('#comment-' + id).remove();
                         jQuery('#comment-t-' + id).remove();
-                        jQuery('#comment-count-' + html).html(jQuery('#list-comment-' + html + ' li').size());
+                        jQuery('#comment-count-' + data.id_feeds).html(data.count);
                     }});
             }
             return false;
         }
 
         function addComment(id) {
-            jQuery.ajax({'type': 'POST', 'data': $('#comment-form-' + id).serialize(), 'url': '" . Yii::app()->createUrl('/m/feeds/ajaxNewComment/id') . "/' + id, 'cache': false, 'success': function (html) {
-                    jQuery('#list-comment-' + id).append(html);
-                    jQuery('#comment-count-' + id).html(jQuery('#list-comment-' + id + ' li').size());
+            jQuery.ajax({'type': 'POST', 'data': $('#comment-form-' + id).serialize(), 'url': '" . Yii::app()->createUrl('/m/feeds/ajaxNewComment/id') . "/' + id, 'cache': false, dataType: 'json', 'success': function (data) {
+                    jQuery('#list-comment-' + id).append(data.html);
+                    jQuery('#comment-count-' + id).html(data.count);
                     jQuery('#comment-form-' + id + ' textarea').val('');
                 }});
             return false;

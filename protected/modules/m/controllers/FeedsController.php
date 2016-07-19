@@ -134,7 +134,7 @@ class FeedsController extends Controller {
                 if ($event->save()) {
                     $feed->event_id = $event->id;
                 } else {
-                    foreach ($event->getErrors() as  $key => $error)
+                    foreach ($event->getErrors() as $key => $error)
                         $errors[$key] = $error[0];
                 }
             }
@@ -147,7 +147,7 @@ class FeedsController extends Controller {
                     $this->redirect(array('index'));
                 }
             } else {
-                foreach ($feed->getErrors() as  $key => $error)
+                foreach ($feed->getErrors() as $key => $error)
                     $errors[$key] = $error[0];
             }
             if (count($errors) > 0)
@@ -308,9 +308,13 @@ class FeedsController extends Controller {
         if (isset($_POST['FeedsComments'])) {
             $comment->attributes = $_POST['FeedsComments'];
             if ($comment->save()) {
-                $this->renderPartial('/comments/_comment', array(
-                    'comment' => $comment,
-                ));
+                $count = $comment->idFeeds->feedsCommentCount;
+                $html = $this->renderPartial('/comments/_comment', array(
+                        'comment' => $comment,
+                    ),true);
+                echo CJSON::encode(array(
+                    'html' =>$html,
+                    'count' => $count));
             }
         }
     }
@@ -329,9 +333,11 @@ class FeedsController extends Controller {
                 $comment->blocked_date = date("Y-m-d h:i:s");
             }
             $comment->save(false);
-            echo $comment->id_feeds;
+            $count = $comment->idFeeds->feedsCommentCount;
+            echo CJSON::encode(array('id_feeds' => $comment->id_feeds, 'count' => $count));
         }
     }
+
     public function actionAjaxLoadComments($id) {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
@@ -340,8 +346,8 @@ class FeedsController extends Controller {
 
         if ($feed != null) {
             $this->renderPartial('/comments/_comments_popup', array(
-                                        'comments' => $feed->feedsComment,
-                                    ));
+                'comments' => $feed->feedsComment,
+            ));
         }
     }
 
