@@ -162,7 +162,7 @@ class MemberController extends Controller
 
     public function actionNotification()
     {
-        $user = Users::model()->findByPk(Yii::app()->user->id);
+        $user = Users::model()->findByPk(Yii::app()->user->id['id']);
 
         if ($user != null) {
             Notification::model()->updateAll(array('read' => 1), "id_user=:idUser", array(':idUser' => $user->id_user));
