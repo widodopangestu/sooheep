@@ -2,11 +2,13 @@
 
 Yii::import("application.extensions.thumbnailer.ThumbLib_inc", true);
 
-class FeedsController extends Controller {
+class FeedsController extends Controller
+{
 
     public $layout = '//layouts/main';
 
-    public function filters() {
+    public function filters()
+    {
         return array(
             'accessControl', // perform access control for CRUD operations
         );
@@ -17,10 +19,11 @@ class FeedsController extends Controller {
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function accessRules() {
+    public function accessRules()
+    {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention', 'ajaxListComments', 'ajaxNewComment', 'ajaxDeleteComment', 'ajaxLoadComments'),
+                'actions' => array('index', 'feed', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention', 'ajaxListComments', 'ajaxNewComment', 'ajaxDeleteComment', 'ajaxLoadComments'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -29,7 +32,8 @@ class FeedsController extends Controller {
         );
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $user = Yii::app()->user->id;
         $interest = UserInterest::model()->findAllByAttributes(array('id_user' => $user['id']));
         $userS = Users::model()->findByPk($user['id']);
@@ -69,7 +73,17 @@ class FeedsController extends Controller {
         }
     }
 
-    public function actionChecknotif() {
+    public function actionFeed($q)
+    {
+        $feed = Feeds::model()->findByAttributes(array('hash' => $q));
+        $this->render('feed', array(
+            'feed' => $feed,
+            'user' => $feed->user
+        ));
+    }
+
+    public function actionChecknotif()
+    {
         $return = Notification::model()->count(array(
             'condition' => 't.id_user = ' . Yii::app()->user->id['id'] . ' AND t.read = 0',
         ));
@@ -77,7 +91,8 @@ class FeedsController extends Controller {
         echo CJSON::encode(array('jumlah' => ($return == 0) ? "" : $return));
     }
 
-    public function actionSetFeed() {
+    public function actionSetFeed()
+    {
         if (isset($_POST['Feeds'])) {
             $errors = array();
             $feed = new Feeds;
@@ -156,7 +171,8 @@ class FeedsController extends Controller {
         }
     }
 
-    public function actionUploadimage() {
+    public function actionUploadimage()
+    {
         if (isset($_POST['Feeds'])) {
             $ImageHandler = new ImageHandler();
             $model = new Feeds;
@@ -185,7 +201,8 @@ class FeedsController extends Controller {
         }
     }
 
-    public function actionUpload() {
+    public function actionUpload()
+    {
         if (isset($_FILES["file"])) {
             $dir = Yii::getPathOfAlias('webroot') . Yii::app()->params['timeline'];
             $file = CUploadedFile::getInstanceByName('file');
@@ -207,7 +224,8 @@ class FeedsController extends Controller {
         }
     }
 
-    public function actionUploadfile() {
+    public function actionUploadfile()
+    {
         echo "test gan";
         if (isset($_POST['Feeds'])) {
             $imageHandler = new ImageHandler();
@@ -262,7 +280,8 @@ class FeedsController extends Controller {
       );
       }
      */
-    public function actionGet_mention() {
+    public function actionGet_mention()
+    {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -297,7 +316,8 @@ class FeedsController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionAjaxNewComment($id) {
+    public function actionAjaxNewComment($id)
+    {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -310,16 +330,17 @@ class FeedsController extends Controller {
             if ($comment->save()) {
                 $count = $comment->idFeeds->feedsCommentCount;
                 $html = $this->renderPartial('/comments/_comment', array(
-                        'comment' => $comment,
-                    ),true);
+                    'comment' => $comment,
+                        ), true);
                 echo CJSON::encode(array(
-                    'html' =>$html,
+                    'html' => $html,
                     'count' => $count));
             }
         }
     }
 
-    public function actionAjaxDeleteComment($id, $type) {
+    public function actionAjaxDeleteComment($id, $type)
+    {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -338,7 +359,8 @@ class FeedsController extends Controller {
         }
     }
 
-    public function actionAjaxLoadComments($id) {
+    public function actionAjaxLoadComments($id)
+    {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }

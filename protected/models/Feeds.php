@@ -31,7 +31,8 @@
  * @property FeedsComments[] $feedsComments
  * @property FeedsCommunity[] $feedsCommunities
  */
-class Feeds extends CActiveRecord {
+class Feeds extends CActiveRecord
+{
 
     /**
      * @return string the associated database table name
@@ -61,14 +62,16 @@ class Feeds extends CActiveRecord {
     const POST_GROUP = 2;
     const POST_COMMUNITY = 3;
 
-    public function tableName() {
+    public function tableName()
+    {
         return 'feeds';
     }
 
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules() {
+    public function rules()
+    {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
@@ -86,7 +89,8 @@ class Feeds extends CActiveRecord {
     /**
      * @return array relational rules.
      */
-    public function relations() {
+    public function relations()
+    {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
@@ -104,7 +108,8 @@ class Feeds extends CActiveRecord {
         );
     }
 
-    public function beforeValidate() {
+    public function beforeValidate()
+    {
         if ($this->type !== Feeds::TYPE_TAG_POST) {
             $user = Yii::app()->user->id;
             $this->id_user = $user['id'];
@@ -114,7 +119,8 @@ class Feeds extends CActiveRecord {
         return true;
     }
 
-    public function behaviors() {
+    public function behaviors()
+    {
         return array(
             'timestamps' => array(
                 'class' => 'zii.behaviors.CTimestampBehavior',
@@ -126,7 +132,8 @@ class Feeds extends CActiveRecord {
         );
     }
 
-    public function afterSave() {
+    public function afterSave()
+    {
         $attributes = new FeedsAttributes;
         $attributes->id_feeds = $this->id_feeds;
         $attributes->type = $this->type;
@@ -139,7 +146,8 @@ class Feeds extends CActiveRecord {
             $this->generateFeedTags($this);
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         $description = "Text";
         switch ($this->type) {
             case self::TYPE_ACTIVITY_POST:
@@ -176,7 +184,8 @@ class Feeds extends CActiveRecord {
         return $description;
     }
 
-    public function getAllHomeFeeds($me = FALSE, $id = NULL) {
+    public function getAllHomeFeeds($me = FALSE, $id = NULL)
+    {
         $criteria = new CDbCriteria;
         if ($me) {
             $id_user = intval(Yii::app()->user->id['id']);
@@ -209,7 +218,8 @@ class Feeds extends CActiveRecord {
         ));
     }
 
-    public function getAllCommunityfeedsHome() {
+    public function getAllCommunityfeedsHome()
+    {
         $criteria = new CDbCriteria;
         $criteria->condition = '(t.id_user IN (SELECT friend.id_user_friend FROM friend WHERE friend.id_user = :id AND block = 0) OR t.id_user = :id) AND t.post_community_id IS NOT NULL';
         $criteria->order = "t.created_date DESC";
@@ -223,7 +233,8 @@ class Feeds extends CActiveRecord {
         ));
     }
 
-    public function getAllGroupFeeds($interest, $type = null) {
+    public function getAllGroupFeeds($interest, $type = null)
+    {
         $criteria = new CDbCriteria;
         $whereType = '';
         if ($type != null) {
@@ -244,7 +255,8 @@ class Feeds extends CActiveRecord {
         ));
     }
 
-    public function getAllCommunityFeeds($interest, $type = null) {
+    public function getAllCommunityFeeds($interest, $type = null)
+    {
         $criteria = new CDbCriteria;
         $whereType = '';
         if ($type != null) {
@@ -265,18 +277,21 @@ class Feeds extends CActiveRecord {
         ));
     }
 
-    public function getInterest() {
+    public function getInterest()
+    {
         return Interest::model()->findByPk($this->post_interest_id);
     }
 
-    public function getCommunityFeed() {
+    public function getCommunityFeed()
+    {
         return InterestCommunity::model()->findByPk($this->post_community_id);
     }
 
     /**
      * @return array customized attribute labels (name=>label)
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return array(
             'id_feeds' => 'Id Feeds',
             'id_user' => 'Id User',
@@ -289,7 +304,8 @@ class Feeds extends CActiveRecord {
         );
     }
 
-    public function getComments() {
+    public function getComments()
+    {
         $id = $this->id_feeds;
         $model = FeedsComments::model()->findAll(array(
             'condition' => 'id_feeds = :idFeeds',
@@ -313,7 +329,8 @@ class Feeds extends CActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search()
+    {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -338,16 +355,27 @@ class Feeds extends CActiveRecord {
      * @param string $className active record class name.
      * @return Feeds the static model class
      */
-    public static function model($className = __CLASS__) {
+    public static function model($className = __CLASS__)
+    {
         return parent::model($className);
     }
 
-    public static function generateFeedTags($feed) {
+    public static function generateFeedTags($feed)
+    {
         $mentions = CJSON::decode($feed->jsonMention);
         foreach ($mentions as $mention) {
             $model = new Feeds;
             if ($mention['type'] == "user") {
                 $model->id_user = $mention['id'];
+                $model = new Notification();
+                $user = Users::model()->findByPk($feed->id_user);
+                $name = $user->profiles->firstname . " " . $user->profiles->lastname;
+                $model->type = Notification::TYPE_COMMENT_POST;
+                $model->id_user = $model->id_user;
+                $model->referation_link = Yii::app()->createUrl('m/feeds/feed', array('q' => $feed->hash));
+                $model->word = str_replace("{friend}", $name, $model->getDescription($model->type));
+                $model->read = 0;
+                $model->save(false);
             } else if ($mention['type'] == "interest") {
                 $model->post_interest_id = $mention['id'];
                 $model->post_type = Feeds::POST_GROUP;
@@ -361,7 +389,8 @@ class Feeds extends CActiveRecord {
         }
     }
 
-    public function getCountRepost() {
+    public function getCountRepost()
+    {
         $sql = "SELECT count(id_feeds) as total FROM feeds WHERE repost_id ='" . $this->id_feeds . "'";
         $result = Yii::app()->db->createCommand($sql)->queryRow();
         $res = 0;

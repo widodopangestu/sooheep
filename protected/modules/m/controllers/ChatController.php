@@ -33,6 +33,16 @@ class ChatController extends Controller
 
     public function actionPersonal()
     {
+        $fren = new Friend;
+                $fren->id_user = 29;
+                $fren->id_user_friend = 30;
+                $fren->approval = 0;
+                $fren->heap = 1;
+                $fren->request_date = date("Y-m-d H:i:s");
+                echo  'test gan';
+                $fren->save();
+                exit();
+                        
         $this->render('personal', array());
     }
 

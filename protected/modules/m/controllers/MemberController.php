@@ -2,7 +2,8 @@
 
 use yii\web\User;
 
-class MemberController extends Controller {
+class MemberController extends Controller
+{
 
     public $layout = '//layouts/main';
 
@@ -11,20 +12,22 @@ class MemberController extends Controller {
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function filters() {
+    public function filters()
+    {
         return array(
             'accessControl', // perform access control for CRUD operations
         );
     }
 
-    public function accessRules() {
+    public function accessRules()
+    {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('login', 'signup', 'logout', 'searchfriend', 'updateAllUser'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'profile', 'confirmfriends', 'gallery', 'addfriends', 'changeprofile', 'changeBackgroundprofile'),
+                'actions' => array('index', 'profile', 'confirmfriends', 'gallery', 'addfriends', 'changeprofile', 'changeBackgroundprofile', 'notification'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -33,11 +36,13 @@ class MemberController extends Controller {
         );
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $this->render('index');
     }
 
-    public function actionLogin() {
+    public function actionLogin()
+    {
 
         $this->layout = '//layouts/login';
         $formLog = new LoginForm;
@@ -54,7 +59,8 @@ class MemberController extends Controller {
         ));
     }
 
-    public function actionSignup() {
+    public function actionSignup()
+    {
         $this->layout = '//layouts/login';
         $formLog = new LoginForm;
         $formReg = new RegisterForm("step1");
@@ -82,7 +88,8 @@ class MemberController extends Controller {
         ));
     }
 
-    public function actionUpdateAllUser() {
+    public function actionUpdateAllUser()
+    {
         $user = Users::model()->findAll();
         foreach ($user as $u) {
             $u->email = strtolower($u->email);
@@ -96,12 +103,14 @@ class MemberController extends Controller {
         }
     }
 
-    public function actionLogout() {
+    public function actionLogout()
+    {
         Yii::app()->user->logout();
         $this->redirect(array('login'));
     }
 
-    public function actionSearchfriend($mode = null) {
+    public function actionSearchfriend($mode = null)
+    {
         $alluser = new Profile;
         $alluser->unsetAttributes();  // clear any default values
         if (isset($_GET['Profile'])) {
@@ -120,7 +129,8 @@ class MemberController extends Controller {
         }
     }
 
-    public function actionProfile($q) {
+    public function actionProfile($q)
+    {
         $user = Users::model()->findByAttributes(array('hash' => $q));
         $feed = new Feeds();
 
@@ -145,11 +155,41 @@ class MemberController extends Controller {
                 'posts' => $posts,
                 'pages' => $pages
             ));
-        } else
+        } else {
             throw new Exception('Cannot find User');
+        }
     }
 
-    public function actionAddfriends($q) {
+    public function actionNotification()
+    {
+        $user = Users::model()->findByPk(Yii::app()->user->id);
+
+        if ($user != null) {
+            Notification::model()->updateAll(array('read' => 1), "id_user=:idUser", array(':idUser' => $user->id_user));
+            $criteria = new CDbCriteria;
+            $criteria->condition = 't.id_user = :id';
+            $criteria->order = "t.date_create DESC";
+            $criteria->params = array(
+                ':id' => $user->id_user,
+            );
+
+            $total = Notification::model()->count($criteria);
+            $pages = new CPagination($total);
+            $pages->pageSize = 20;
+            $pages->applyLimit($criteria);
+            $notif = Notification::model()->findAll($criteria);
+            $this->render('notification', array(
+                'user' => $user,
+                'notif' => $notif,
+                'pages' => $pages
+            ));
+        } else {
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+    }
+
+    public function actionAddfriends($q)
+    {
         $cekFren = Users::model()->findByAttributes(array('hash' => $q));
         if ($cekFren != null) {
             $cekAgain = Friend::model()->findByAttributes(array('id_user' => $cekFren->id_user, 'id_user_friend' => Yii::app()->user->id['id']));
@@ -163,7 +203,6 @@ class MemberController extends Controller {
                 $fren->request_date = date("Y-m-d H:i:s");
 
                 if ($fren->save()) {
-                    $this->setNotif($fren->id_user_friend, Notification::TYPE_ADD_FRIEND, Yii::app()->createUrl('/m/member/profile', array('q' => $q)), Yii::app()->user->id['id']);
                     Yii::app()->user->setflash("pesan-add-sukses", "please wait for your friend to confirm");
                     $this->redirect(array('profile', 'q' => $q));
                 }
@@ -173,7 +212,8 @@ class MemberController extends Controller {
         }
     }
 
-    public function actionConfirmfriends($q) {
+    public function actionConfirmfriends($q)
+    {
         $user = Users::model()->findByAttributes(array('hash' => $q));
         $fren = Friend::model()->findByAttributes(array('id_user' => $user->id_user, 'id_user_friend' => Yii::app()->user->id['id']));
         $fren->approval = 1;
@@ -185,7 +225,8 @@ class MemberController extends Controller {
         }
     }
 
-    public function actionGallery($id = null) {
+    public function actionGallery($id = null)
+    {
         $id_user = ($id == null) ? Yii::app()->user->id['id'] : $id;
         //images
         $crImage = new CDbCriteria;
@@ -239,7 +280,8 @@ class MemberController extends Controller {
         ));
     }
 
-    public function actionChangeprofile() {
+    public function actionChangeprofile()
+    {
         $images = CUploadedFile::getInstanceByName('images_profile');
         if ($images != null) {
             $ImageHandler = new ImageHandler();
@@ -278,7 +320,8 @@ class MemberController extends Controller {
         }
     }
 
-    public function actionChangeBackgroundprofile() {
+    public function actionChangeBackgroundprofile()
+    {
         $images = CUploadedFile::getInstanceByName('images_background');
         if ($images != null) {
             $ImageHandler = new ImageHandler();

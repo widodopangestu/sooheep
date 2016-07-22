@@ -97,7 +97,7 @@
                         </div>
                         <div class="left sliding"><img src="<?php echo $baseUrl . "/" ?>assets/img/logo1.png" style="height:27px;width:auto;"></div>
                         <div class="right">
-                            <a href="#" class="link icon-only" data-panel="right">
+                            <a href="#" onclick="window.location.href = '<?php echo Yii::app()->createUrl('/m/member/notification') ?>';" class="link icon-only" data-panel="right">
                                 <span class="kkicon icon-alarm"></span>
                                 <span class="notif notification"></span>
                             </a>

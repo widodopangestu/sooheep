@@ -135,4 +135,20 @@ class FeedsComments extends CActiveRecord {
             ),
         );
     }
+
+    protected function afterSave()
+    {
+        $model = new Notification();
+        if ($this->id_user != $this->idFeeds->user->id_user) {
+            $user = Users::model()->findByPk($this->id_user);
+            $name = $user->profiles->firstname . " " . $user->profiles->lastname;
+            $model->type = Notification::TYPE_COMMENT_POST;
+            $model->id_user = $this->idFeeds->user->id_user;
+            $model->referation_link = Yii::app()->createUrl('m/feeds/feed', array('q' => $this->idFeeds->hash));
+            $model->word = str_replace("{friend}", $name, $model->getDescription($model->type));
+        } 
+        $model->read = 0;
+        $model->save(false);
+        parent::afterSave();
+    }
 }
