@@ -367,15 +367,15 @@ class Feeds extends CActiveRecord
             $model = new Feeds;
             if ($mention['type'] == "user") {
                 $model->id_user = $mention['id'];
-                $model = new Notification();
+                $notif = new Notification();
                 $user = Users::model()->findByPk($feed->id_user);
                 $name = $user->profiles->firstname . " " . $user->profiles->lastname;
-                $model->type = Notification::TYPE_COMMENT_POST;
-                $model->id_user = $model->id_user;
-                $model->referation_link = Yii::app()->createUrl('m/feeds/feed', array('q' => $feed->hash));
-                $model->word = str_replace("{friend}", $name, $model->getDescription($model->type));
-                $model->read = 0;
-                $model->save(false);
+                $notif->type = Notification::TYPE_TAGGING;
+                $notif->id_user = $model->id_user;
+                $notif->referation_link = Yii::app()->createUrl('m/feeds/feed', array('q' => $feed->hash));
+                $notif->word = str_replace("{friend}", $name, $notif->getDescription($notif->type));
+                $notif->read = 0;
+                $notif->save(false);
             } else if ($mention['type'] == "interest") {
                 $model->post_interest_id = $mention['id'];
                 $model->post_type = Feeds::POST_GROUP;
