@@ -72,6 +72,9 @@ $user = $user->profiles;
                                                     case Notification::TYPE_COMMENT_POST:
                                                         $this->renderPartial('_notif_comment', array('data' => $data));
                                                         break;
+                                                    case Notification::TYPE_TAGGING:
+                                                        $this->renderPartial('_notif_tag', array('data' => $data));
+                                                        break;
                                                     default:
                                                         $this->renderPartial('_notif_friend', array('data' => $data));
                                                         break;
