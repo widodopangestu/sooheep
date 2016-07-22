@@ -144,4 +144,10 @@ class Friend extends CActiveRecord
         parent::afterSave();
     }
 
+    public function getFriend($user_id)
+    {
+        $user = ($this->id_user == $user_id) ? $this->id_user_friend : $this->id_user;
+        return Users::model()->findByPk($user);
+    }
+
 }

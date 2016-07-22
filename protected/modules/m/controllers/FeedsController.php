@@ -285,6 +285,7 @@ class FeedsController extends Controller
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
+        $userId = Yii::app()->user->id['id'];
         $friends = Friend::model()->findAll(array(
             'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
             'params' => array(
@@ -296,10 +297,11 @@ class FeedsController extends Controller
         $interests = UserInterest::model()->findAllByAttributes(array('id_user' => Yii::app()->user->id['id']));
         $data = array();
         foreach ($friends as $friend) {
+            $uFriend = $friend->getFriend($userId);
             $data[] = array(
-                "id" => $friend->idUserFriend->id_user,
-                "name" => $friend->idUserFriend->fullName,
-                "avatar" => $friend->idUserFriend->pictureUrl,
+                "id" => $uFriend->id_user,
+                "name" => $uFriend->fullName,
+                "avatar" => $uFriend->pictureUrl,
                 "type" => "user"
             );
         }
