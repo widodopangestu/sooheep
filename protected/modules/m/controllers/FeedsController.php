@@ -2,13 +2,11 @@
 
 Yii::import("application.extensions.thumbnailer.ThumbLib_inc", true);
 
-class FeedsController extends Controller
-{
+class FeedsController extends Controller {
 
     public $layout = '//layouts/main';
 
-    public function filters()
-    {
+    public function filters() {
         return array(
             'accessControl', // perform access control for CRUD operations
         );
@@ -19,8 +17,7 @@ class FeedsController extends Controller
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function accessRules()
-    {
+    public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'feed', 'setFeed', 'uploadimage', 'checknotif', 'uploadfile', 'upload', 'get_mention', 'ajaxListComments', 'ajaxNewComment', 'ajaxDeleteComment', 'ajaxLoadComments'),
@@ -32,8 +29,7 @@ class FeedsController extends Controller
         );
     }
 
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $user = Yii::app()->user->id;
         $interest = UserInterest::model()->findAllByAttributes(array('id_user' => $user['id']));
         $userS = Users::model()->findByPk($user['id']);
@@ -73,8 +69,7 @@ class FeedsController extends Controller
         }
     }
 
-    public function actionFeed($q)
-    {
+    public function actionFeed($q) {
         $feed = Feeds::model()->findByAttributes(array('hash' => $q));
         $this->render('feed', array(
             'feed' => $feed,
@@ -82,8 +77,7 @@ class FeedsController extends Controller
         ));
     }
 
-    public function actionChecknotif()
-    {
+    public function actionChecknotif() {
         $return = Notification::model()->count(array(
             'condition' => 't.id_user = ' . Yii::app()->user->id['id'] . ' AND t.read = 0',
         ));
@@ -91,8 +85,7 @@ class FeedsController extends Controller
         echo CJSON::encode(array('jumlah' => ($return == 0) ? "" : $return));
     }
 
-    public function actionSetFeed()
-    {
+    public function actionSetFeed() {
         if (isset($_POST['Feeds'])) {
             $errors = array();
             $feed = new Feeds;
@@ -171,8 +164,7 @@ class FeedsController extends Controller
         }
     }
 
-    public function actionUploadimage()
-    {
+    public function actionUploadimage() {
         if (isset($_POST['Feeds'])) {
             $ImageHandler = new ImageHandler();
             $model = new Feeds;
@@ -201,8 +193,7 @@ class FeedsController extends Controller
         }
     }
 
-    public function actionUpload()
-    {
+    public function actionUpload() {
         if (isset($_FILES["file"])) {
             $dir = Yii::getPathOfAlias('webroot') . Yii::app()->params['timeline'];
             $file = CUploadedFile::getInstanceByName('file');
@@ -224,8 +215,7 @@ class FeedsController extends Controller
         }
     }
 
-    public function actionUploadfile()
-    {
+    public function actionUploadfile() {
         echo "test gan";
         if (isset($_POST['Feeds'])) {
             $imageHandler = new ImageHandler();
@@ -254,72 +244,49 @@ class FeedsController extends Controller
         }
     }
 
-    // Uncomment the following methods and override them if needed
-    /*
-      public function filters()
-      {
-      // return the filter configuration for this controller, e.g.:
-      return array(
-      'inlineFilterName',
-      array(
-      'class'=>'path.to.FilterClass',
-      'propertyName'=>'propertyValue',
-      ),
-      );
-      }
-
-      public function actions()
-      {
-      // return external action classes, e.g.:
-      return array(
-      'action1'=>'path.to.ActionClass',
-      'action2'=>array(
-      'class'=>'path.to.AnotherActionClass',
-      'propertyName'=>'propertyValue',
-      ),
-      );
-      }
-     */
-    public function actionGet_mention()
-    {
+    public function actionGet_mention($type) {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
-        $userId = Yii::app()->user->id['id'];
-        $friends = Friend::model()->findAll(array(
-            'condition' => '(id_user = :idUser OR id_user_friend = :idUser) AND approval = 1',
-            'params' => array(
-                ':idUser' => Yii::app()->user->id['id']
-            ),
-            'order' => 'request_date DESC',
-            'limit' => 200
-        ));
-        $interests = UserInterest::model()->findAllByAttributes(array('id_user' => Yii::app()->user->id['id']));
         $data = array();
-        foreach ($friends as $friend) {
-            $uFriend = $friend->getFriend($userId);
-            $data[] = array(
-                "id" => $uFriend->id_user,
-                "name" => $uFriend->fullName,
-                "avatar" => $uFriend->pictureUrl,
-                "type" => "user"
-            );
-        }
-        foreach ($interests as $interest) {
-            $data[] = array(
-                "id" => $interest->idInterest->id_interest,
-                "name" => $interest->idInterest->interest_name,
-                "avatar" => Yii::app()->theme->baseUrl . "/images/interest-logo.png",
-                "type" => "interest"
-            );
+        $user = Users::model()->findByPk(Yii::app()->user->id['id']);
+        if ($user != null) {
+            if ($type == 'user') {
+                foreach ($user->friendsId as $friendId) {
+                    $friend = Users::model()->findByPk($friendId);
+                    $data[] = array(
+                        "id" => $friend->id_user,
+                        "name" => $friend->fullName,
+                        "avatar" => $friend->pictureUrl,
+                        "type" => "user"
+                    );
+                }
+            } else if ($type == 'group') {
+                foreach ($user->userInterests as $userInterest) {
+                    $data[] = array(
+                        "id" => $userInterest->idInterest->id_interest,
+                        "name" => $userInterest->idInterest->interest_name,
+                        "avatar" => Yii::app()->theme->baseUrl . "/images/interest-logo.png",
+                        "type" => "group"
+                    );
+                }
+            } else {
+                foreach ($user->userCommunities as $userCommunity) {
+                    $data[] = array(
+                        "id" => $userCommunity->idInterestComunity->id,
+                        "name" => $userCommunity->idInterestComunity->community_name,
+                        "avatar" => Yii::app()->theme->baseUrl . "/images/interest-logo.png",
+                        "type" => "community"
+                    );
+                }
+            }
         }
         header('Content-type: application/json');
         echo CJSON::encode($data);
         Yii::app()->end();
     }
 
-    public function actionAjaxNewComment($id)
-    {
+    public function actionAjaxNewComment($id) {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -341,8 +308,7 @@ class FeedsController extends Controller
         }
     }
 
-    public function actionAjaxDeleteComment($id, $type)
-    {
+    public function actionAjaxDeleteComment($id, $type) {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }
@@ -361,8 +327,7 @@ class FeedsController extends Controller
         }
     }
 
-    public function actionAjaxLoadComments($id)
-    {
+    public function actionAjaxLoadComments($id) {
         if (!Yii::app()->request->isAjaxRequest) {
             throw new CHttpException('403', 'Forbidden access.');
         }

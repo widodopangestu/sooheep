@@ -171,9 +171,9 @@
                 <!--                <div class="toolbar" style="background-color:#B7461A !important;opacity:0.6;">
                                     <div class="toolbar-inner">
                 <?php if ($this->interest != null || $this->community != null) : ?>
-                                                                    <a data-popup=".popup-poll" class="link open-popup" href="#">
-                                                                        <span class="fa fa-list-alt"></span>
-                                                                    </a>
+                                                                                <a data-popup=".popup-poll" class="link open-popup" href="#">
+                                                                                    <span class="fa fa-list-alt"></span>
+                                                                                </a>
                 <?php endif; ?>
                                         <a data-popup=".popup-map"  class="link open-popup" href="#">
                                             <span class="fa fa-map-marker"></span>
@@ -271,8 +271,14 @@
                             echo $form->hiddenField($feed, 'location');
                             echo $form->hiddenField($feed, 'filePath');
                             echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_LOCATION_POST));
-                            echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                            echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                             ?>
+                        </div>
+                        <div class="input-text">
+                            <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                        </div>
+                        <div class="input-text">
+                            <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                         </div>
                     </div>
                     <div class="form-row">
@@ -328,8 +334,14 @@
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_FILE_POST));
-                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                         ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                     </div>
                 </div>
                 <div class="form-row">
@@ -385,8 +397,14 @@
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_MUSIC_POST));
-                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                         ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                     </div>
                 </div>
                 <div class="form-row">
@@ -442,8 +460,14 @@
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_VIDEO_POST));
-                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                         ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                     </div>
                 </div>
                 <div class="form-row">
@@ -498,8 +522,14 @@
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_IMAGE_POST));
-                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                         ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                     </div>
                 </div>
                 <div class="form-row">
@@ -555,8 +585,14 @@
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_REPOST_POST));
-                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                         ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                     </div>
                 </div>
                 <div class="feeds-repost-content"style="
@@ -614,8 +650,14 @@
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_POLL_POST));
-                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                         ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                     </div>
                 </div>
                 <div class="feeds-poll-content"style="
@@ -784,8 +826,14 @@ JS;
                         echo $form->hiddenField($feed, 'fileName');
                         echo $form->hiddenField($feed, 'filePath');
                         echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_EVENT_POST));
-                        echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
                         ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
                     </div>
                 </div>
                 <div class="feeds-event-content"style="
@@ -831,66 +879,72 @@ JS;
             </div>
             <table border="0" id="all-comment" style="padding-left: 0;" id="list-comment-<?php echo $data->id_feeds ?>">
             </table>
+        </div>	
+    </div>
+</div>
+<!-- Picker -->
+<div class="picker-modal picker-social">
+    <div class="toolbar">
+        <div class="toolbar-inner">
+            <div class="left"></div>
+            <div class="right"><a href="#" class="close-picker">Done</a></div>
+        </div>
+    </div>
+    <div class="picker-modal-inner">
+        <div class="content-block mt-15 mb-10">
+            <div class="forms">
+                <h3>What do you heep?</h3>
+                <?php
+                $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+                    'id' => 'feeds-text',
+                    'type' => 'horizontal',
+                    'action' => CController::createUrl('/m/feeds/setFeed'),
+                    'htmlOptions' => array(
+                        'class' => 'js-validate'
+                    )
+                ));
+                ?>
+
+                <div class="form-row">
+                    <div class="input-text">
+                        <?php
+                        if ($this->interest != null) {
+                            echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
+                        }
+                        if ($this->community != null) {
+                            echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
+                            echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
+                        }
+                        echo $form->hiddenField($feed, 'jsonMention');
+                        echo $form->hiddenField($feed, 'fileName');
+                        echo $form->hiddenField($feed, 'filePath');
+                        echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_TEXT_POST));
+                        echo $form->textArea($feed, 'text_caption', array('class' => "share-text", 'placeholder' => 'Share your heep...'));
+                        ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_group', array('style' => 'min-height:30px;', 'class' => "tag-group", 'placeholder' => 'Tag Group...')); ?>
+                    </div>
+                    <div class="input-text">
+                        <?php echo $form->textArea($feed, 'tag_community', array('style' => 'min-height:30px;', 'class' => "tag-community", 'placeholder' => 'Tag Community...')); ?>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-submit">
+                        <button type="submit" class="button button-big js-form-submit button-fill pull-right button-primary">Send</button>
+                    </div>
+                </div>
+                <?php $this->endWidget(); ?>
             </div>	
         </div>
     </div>
-    <!-- Picker -->
-    <div class="picker-modal picker-social">
-        <div class="toolbar">
-            <div class="toolbar-inner">
-                <div class="left"></div>
-                <div class="right"><a href="#" class="close-picker">Done</a></div>
-            </div>
-        </div>
-        <div class="picker-modal-inner">
-            <div class="content-block mt-15 mb-10">
-                <div class="forms">
-                    <h3>What do you heep?</h3>
-                    <?php
-                    $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-                        'id' => 'feeds-text',
-                        'type' => 'horizontal',
-                        'action' => CController::createUrl('/m/feeds/setFeed'),
-                        'htmlOptions' => array(
-                            'class' => 'js-validate'
-                        )
-                    ));
-                    ?>
+</div>
+<?php
+Yii::app()->clientScript->registerCoreScript('jquery', CClientScript::POS_END);
+Yii::app()->clientScript->registerCoreScript('jquery-ui', CClientScript::POS_END);
 
-                    <div class="form-row">
-                        <div class="input-text">
-                            <?php
-                            if ($this->interest != null) {
-                                echo $form->hiddenField($feed, 'post_interest_id', array('value' => $this->interest->id_interest));
-                                echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_GROUP));
-                            }
-                            if ($this->community != null) {
-                                echo $form->hiddenField($feed, 'post_community_id', array('value' => $this->community->id));
-                                echo $form->hiddenField($feed, 'post_type', array('value' => Feeds::POST_COMMUNITY));
-                            }
-                            echo $form->hiddenField($feed, 'jsonMention');
-                            echo $form->hiddenField($feed, 'fileName');
-                            echo $form->hiddenField($feed, 'filePath');
-                            echo $form->hiddenField($feed, 'type', array('value' => Feeds::TYPE_TEXT_POST));
-                            echo $form->textArea($feed, 'text_caption', array('class' => "form-control share-text", 'placeholder' => 'Share your heep...'));
-                            ?>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="input-submit">
-                            <button type="submit" class="button button-big js-form-submit button-fill pull-right button-primary">Send</button>
-                        </div>
-                    </div>
-                    <?php $this->endWidget(); ?>
-                </div>	
-            </div>
-        </div>
-    </div>
-    <?php
-    Yii::app()->clientScript->registerCoreScript('jquery', CClientScript::POS_END);
-    Yii::app()->clientScript->registerCoreScript('jquery-ui', CClientScript::POS_END);
-
-    Yii::app()->clientScript->registerScript('realtime-notif', '
+Yii::app()->clientScript->registerScript('realtime-notif', '
 	window.setInterval(function(){
 	  $.ajax({
 		url:"' . Yii::app()->createUrl('/m/feeds/checknotif') . '",
@@ -902,7 +956,7 @@ JS;
 	}, 5000);
         ', CClientScript::POS_END);
 
-    Yii::app()->clientScript->registerScript('changeprofile', "
+Yii::app()->clientScript->registerScript('changeprofile', "
 				 $('#Images_profile').fileupload({
 			        url: '" . Yii::app()->createUrl('/m/member/changeprofile') . "',
 			        dataType: 'json',
@@ -941,7 +995,7 @@ JS;
 			    }).prop('disabled', !$.support.fileInput)
 			        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 				", CClientScript::POS_END);
-    Yii::app()->clientScript->registerScript('upload-test', "
+Yii::app()->clientScript->registerScript('upload-test', "
                     $('#fileuploader-image').uploadFile({
                         url:'" . Yii::app()->createUrl('/m/feeds/upload') . "',
                         multiple:false,
@@ -999,11 +1053,33 @@ JS;
                         },
                     });
             ", CClientScript::POS_END);
-    Yii::app()->clientScript->registerScript('mentions', "
+Yii::app()->clientScript->registerScript('mentions', "
         $(function () {
             $('textarea.share-text').mentionsInput({
                 onDataRequest: function (mode, query, callback) {
-                    $.getJSON('" . Yii::app()->baseUrl . "/m/feeds/get_mention', function (responseData) {
+                    $.getJSON('" . Yii::app()->baseUrl . "/m/feeds/get_mention/type/user', function (responseData) {
+                        responseData = _.filter(responseData, function (item) {
+                            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        });
+                        callback.call(this, responseData);
+                    });
+                }
+
+            });
+            $('textarea.tag-group').mentionsInput({
+                onDataRequest: function (mode, query, callback) {
+                    $.getJSON('" . Yii::app()->baseUrl . "/m/feeds/get_mention/type/group', function (responseData) {
+                        responseData = _.filter(responseData, function (item) {
+                            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        });
+                        callback.call(this, responseData);
+                    });
+                }
+
+            });
+            $('textarea.tag-community').mentionsInput({
+                onDataRequest: function (mode, query, callback) {
+                    $.getJSON('" . Yii::app()->baseUrl . "/m/feeds/get_mention/type/community', function (responseData) {
                         responseData = _.filter(responseData, function (item) {
                             return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
                         });
@@ -1013,66 +1089,172 @@ JS;
 
             });
             $('#feeds-text').submit(function () {
+                var values = [];
                 $('#feeds-text textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-text input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
-
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-text textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });
+                $('#feeds-text textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });
+                $('#feeds-text input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
             $('#feeds-file').submit(function () {
+                var values = [];
                 $('#feeds-file textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-file input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
-
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });        
+                $('#feeds-file textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-file textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });    
+                $('#feeds-file input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
             $('#feeds-location').submit(function () {
+                var values = [];
                 $('#feeds-location textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-location input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
-
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-location textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });
+                $('#feeds-location textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });
+                ('#feeds-location input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
             $('#feeds-audio').submit(function () {
+                var values = [];
                 $('#feeds-audio textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-audio input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
-
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-audio textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });
+                $('#feeds-audio textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });
+                $('#feeds-audio input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
             $('#feeds-video').submit(function () {
+                var values = [];
                 $('#feeds-video textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-video input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
-
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });    
+                $('#feeds-video textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-video textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });                
+                $('#feeds-video input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
             $('#feeds-image').submit(function () {
+                var values = [];
                 $('#feeds-image textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-image input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
-
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });    
+                $('#feeds-image textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-image textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });             
+                $('#feeds-image input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
             $('#feeds-repost').submit(function () {
+                var values = [];
                 $('#feeds-repost textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-repost input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });     
+                $('#feeds-repost textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-repost textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });          
+                $('#feeds-repost input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
             $('#feeds-poll').submit(function () {
+                var values = [];
                 $('#feeds-poll textarea.share-text').mentionsInput('getMentions', function (data) {
-                    $('#feeds-poll input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(data));
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });    
+                $('#feeds-poll textarea.tag-group').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
                 });
+                $('#feeds-poll textarea.tag-community').mentionsInput('getMentions', function (data) {
+                    $.each(data, function( index, value ) {
+                        values.push(value);                   
+                    });
+                });     
+                $('#feeds-poll input[name=\"Feeds[jsonMention]\"]').val(JSON.stringify(values));
             });
         });        
             ", CClientScript::POS_END);
-    Yii::app()->clientScript->registerScript('repost', "
+Yii::app()->clientScript->registerScript('repost', "
         function loadFeeds(elm) {
             str = elm.prev().html();
             $('.feeds-repost-content').html(str);
             $('#feeds-repost input[name=\"Feeds[repost_id]\"]').val(elm.attr('id'));
         }    
             ", CClientScript::POS_END);
-    Yii::app()->clientScript->registerScript('poll', "
+Yii::app()->clientScript->registerScript('poll', "
     function resizeIframe(obj) {
     obj.style.height = obj.contentWindow.document.body. scrollHeight + 'px';
   }
             ", CClientScript::POS_END);
-    Yii::app()->clientScript->registerScript('comment', "
+Yii::app()->clientScript->registerScript('comment', "
     function deleteComment(id, s) {
             if (s == 'd')
                 var r = confirm('Delete this comment?');
@@ -1105,7 +1287,7 @@ JS;
         }
             ", CClientScript::POS_END);
 
-    Yii::app()->clientScript->registerScript('form-validation', "
+Yii::app()->clientScript->registerScript('form-validation', "
         
             $('#feeds-text').submit(function () {
                 var text = $.trim($('#feeds-text textarea.share-text').val());
@@ -1174,7 +1356,7 @@ JS;
                 }
             });
             ", CClientScript::POS_END);
-    Yii::app()->clientScript->registerScript('event', "    
+Yii::app()->clientScript->registerScript('event', "    
         function loadEvent(time) {
             $('#feeds-event input[name=\"Event[date]\"]').val(time);
             jQuery.ajax({'type': 'POST', 'url': '" . Yii::app()->createUrl('/m/interest/ajaxListEvent/time') . "/' + time, 'cache': false, 'success': function (html) {
@@ -1203,25 +1385,25 @@ JS;
             return false;
         }
             ", CClientScript::POS_END);
-    ?>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.ui.widget.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.fileupload.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/framework7/dist/js/framework7.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/swipebox/src/js/jquery.swipebox.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/Tweetie/tweetie.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/chartjs/Chart.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jflickrfeed.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/min/app.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.form.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.uploadfile.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/video.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/videojs-ie8.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.events.input.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.elastic.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/underscore-min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.mentionsInput.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/mfb.min.js"></script>
+?>
+<script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery/dist/jquery.fileupload.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/framework7/dist/js/framework7.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/swipebox/src/js/jquery.swipebox.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/Tweetie/tweetie.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>bower_components/chartjs/Chart.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jflickrfeed.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/min/app.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.form.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.uploadfile.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/video.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/videojs-ie8.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.events.input.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.elastic.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/underscore-min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.mentionsInput.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/mfb.min.js"></script>
 
 </body>
 

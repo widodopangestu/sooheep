@@ -44,6 +44,8 @@ class Feeds extends CActiveRecord
     public $fileName = "";
     public $filePath = "";
     public $link = "";
+    public $tag_group = "";
+    public $tag_community = "";
     public $jsonMention = "";
 
     const TYPE_TEXT_POST = 1;
@@ -78,7 +80,7 @@ class Feeds extends CActiveRecord
             array('id_user, text_caption, hash', 'required'),
             //array('images','file','types'=>'jpg,jpeg,gif,png','maxSize'=>10*1024*1024, 'on' => 'uploadImg'),
             array('id_user, isDeleted, tag_id, repost_id, poll_id, event_id', 'numerical', 'integerOnly' => true),
-            array('update_date, hash, deleted_date, post_type, post_interest_id, post_community_id, type, filePath, fileName, location, tag_id, repost_id, jsonMention', 'safe'),
+            array('update_date, hash, deleted_date, post_type, post_interest_id, post_community_id, type, filePath, fileName, location, tag_id, repost_id, jsonMention, tag_group, tag_community', 'safe'),
             array('file', 'file', 'types' => 'pdf, xls, xlsx, doc, docx, ppt, pptx, odt, ods, odp, zip, rar, txt, mp4, mp3, png, jpg, jpeg', 'allowEmpty' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -376,9 +378,13 @@ class Feeds extends CActiveRecord
                 $notif->word = str_replace("{friend}", $name, $notif->getDescription($notif->type));
                 $notif->read = 0;
                 $notif->save(false);
-            } else if ($mention['type'] == "interest") {
+            } else if ($mention['type'] == "group") {
                 $model->post_interest_id = $mention['id'];
                 $model->post_type = Feeds::POST_GROUP;
+                $model->id_user = $feed->id_user;
+            } else {
+                $model->post_community_id = $mention['id'];
+                $model->post_type = Feeds::POST_COMMUNITY;
                 $model->id_user = $feed->id_user;
             }
             $model->text_caption = "-"; //$feed->text_caption
