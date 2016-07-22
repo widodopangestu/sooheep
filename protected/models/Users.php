@@ -13,8 +13,15 @@
  * @property integer $activation
  *
  * The followings are the available model relations:
+ * @property FeedsComments[] $feedsComments
+ * @property Friend[] $friends
+ * @property Friend[] $friends1
+ * @property ImageProfile[] $imageProfiles
+ * @property Notification[] $notifications
+ * @property PollVote[] $pollVotes
  * @property Profile[] $profiles
  * @property Role $idRoles
+ * @property Event[] $events
  */
 class Users extends CActiveRecord {
 
@@ -49,6 +56,13 @@ class Users extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'feedsComments' => array(self::HAS_MANY, 'FeedsComments', 'id_user'),
+            'friends' => array(self::HAS_MANY, 'Friend', 'id_user'),
+            'friends1' => array(self::HAS_MANY, 'Friend', 'id_user_friend'),
+            'imageProfiles' => array(self::HAS_MANY, 'ImageProfile', 'id_user'),
+            'notifications' => array(self::HAS_MANY, 'Notification', 'id_user'),
+            'pollVotes' => array(self::HAS_MANY, 'PollVote', 'user_id'),
+            'events' => array(self::MANY_MANY, 'Event', 'users_attend(users_id_user, event_id)'),
             'profiles' => array(self::HAS_ONE, 'Profile', 'id_user'),
             'idRoles' => array(self::BELONGS_TO, 'Role', 'id_roles'),
             'userInterests' => array(self::HAS_MANY, 'UserInterest', 'id_user'),
@@ -165,7 +179,7 @@ class Users extends CActiveRecord {
     }
 
     public function getFriendsId() {
-        $sql = "SELECT friend.id_user_friend , friend.id_user FROM friend WHERE (friend.id_user = $this->id_user OR friend.id_user_friend = $this->id_user) AND block = 0";
+        $sql = "SELECT friend.id_user_friend , friend.id_user FROM friend WHERE (friend.id_user = $this->id_user OR friend.id_user_friend = $this->id_user) AND block = 0 AND approval = 1";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $fr = array();
         foreach ($result as $res) {
@@ -178,7 +192,7 @@ class Users extends CActiveRecord {
     }
 
     public function getListFriendChats() {
-        $sql = "SELECT friend.id_user_friend , friend.id_user FROM friend WHERE (friend.id_user = $this->id_user OR friend.id_user_friend = $this->id_user) AND block = 0";
+        $sql = "SELECT friend.id_user_friend , friend.id_user FROM friend WHERE (friend.id_user = $this->id_user OR friend.id_user_friend = $this->id_user) AND block = 0 AND approval = 1";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
         $fr = array();
         foreach ($result as $res) {
@@ -191,7 +205,10 @@ class Users extends CActiveRecord {
         }
         return $fr;
     }
-
+    public function getChatId() {        
+        $model = Friend::model()->find('id_user_friend = :id OR id_user = :id', array(':id'=>  $this->id_user));
+        return $model->id_user_friend . '-' . $model->id_user;
+    }
     public function getListGroupChats() {
         $interest = array();
         foreach ($this->userInterests as $userInterest) {
