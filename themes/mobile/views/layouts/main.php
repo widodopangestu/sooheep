@@ -1056,31 +1056,22 @@ Yii::app()->clientScript->registerScript('upload-test', "
             ", CClientScript::POS_END);
 Yii::app()->clientScript->registerScript('mentions', "
         $(function () {
-            $('textarea.share-text').mentionsInput({
-                onDataRequest: function (mode, query, callback) {
-                    $.getJSON('" . Yii::app()->baseUrl . "/m/feeds/get_mention/type/user', function (responseData) {
-                        responseData = _.filter(responseData, function (item) {
-                            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
-                        });
-                        callback.call(this, responseData);
-                    });
-                }
-
-            }).bind('input', function(e) { 
-                var ua = navigator.userAgent.toLowerCase(); 
-                var isAndroid = ua.indexOf('android') > -1; 
-                //&&  ua.indexOf('mobile'); 
-                alert(ua);
-                if(isAndroid) { 
-                    var char = this.value.charCodeAt(this.value.length - 1); 
-                    ".'$scope'.".data = char; 
-                    alert('hello' + char);
-                    if(e.keyCode === undefined){ 
-                            e.keyCode = char; 
-                    } 
-                    return true; 
-                } 
-            });
+            $('textarea.share-text').mention({
+    queryBy: ['name', 'username'],
+    users: [{
+        username: 'sarah',
+        name: 'Sarah Jones',
+        image: 'http://placekitten.com/25/25'
+    }, { 
+        username: 'bigCat',
+        name: 'Scott Pfaff',
+        image: 'http://placekitten.com/25/25'
+    }, { 
+        username: 'coderDude',
+        name: 'Roger Penn',
+        image: 'http://placekitten.com/25/25'
+    }]
+});
             $('textarea.tag-group').mentionsInput({
                 onDataRequest: function (mode, query, callback) {
                     $.getJSON('" . Yii::app()->baseUrl . "/m/feeds/get_mention/type/group', function (responseData) {
@@ -1103,6 +1094,8 @@ Yii::app()->clientScript->registerScript('mentions', "
                 }
 
             });
+
+      
             $('#feeds-text').submit(function () {
                 var values = [];
                 $('#feeds-text textarea.share-text').mentionsInput('getMentions', function (data) {
