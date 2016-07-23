@@ -17,19 +17,22 @@
  * The followings are the available model relations:
  * @property Feeds $idUser
  */
-class FeedsComments extends CActiveRecord {
+class FeedsComments extends CActiveRecord
+{
 
     /**
      * @return string the associated database table name
      */
-    public function tableName() {
+    public function tableName()
+    {
         return 'feeds_comments';
     }
 
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules() {
+    public function rules()
+    {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
@@ -45,7 +48,8 @@ class FeedsComments extends CActiveRecord {
     /**
      * @return array relational rules.
      */
-    public function relations() {
+    public function relations()
+    {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
@@ -57,7 +61,8 @@ class FeedsComments extends CActiveRecord {
     /**
      * @return array customized attribute labels (name=>label)
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return array(
             'id' => 'ID',
             'id_user' => 'Id User',
@@ -83,7 +88,8 @@ class FeedsComments extends CActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search()
+    {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -103,7 +109,8 @@ class FeedsComments extends CActiveRecord {
         ));
     }
 
-    public function getProfileuser() {
+    public function getProfileuser()
+    {
         $data = $this->idUser;
         $user = $data;
         if ($user != null) {
@@ -120,11 +127,13 @@ class FeedsComments extends CActiveRecord {
      * @param string $className active record class name.
      * @return FeedsComments the static model class
      */
-    public static function model($className = __CLASS__) {
+    public static function model($className = __CLASS__)
+    {
         return parent::model($className);
     }
 
-    public function behaviors() {
+    public function behaviors()
+    {
         return array(
             'timestamps' => array(
                 'class' => 'zii.behaviors.CTimestampBehavior',
@@ -138,17 +147,40 @@ class FeedsComments extends CActiveRecord {
 
     protected function afterSave()
     {
-        $model = new Notification();
         if ($this->id_user != $this->idFeeds->user->id_user) {
+            $model = new Notification();
             $user = Users::model()->findByPk($this->id_user);
             $name = $user->profiles->firstname . " " . $user->profiles->lastname;
             $model->type = Notification::TYPE_COMMENT_POST;
             $model->id_user = $this->idFeeds->user->id_user;
             $model->referation_link = Yii::app()->createUrl('m/feeds/feed', array('q' => $this->idFeeds->hash));
             $model->word = str_replace("{friend}", $name, $model->getDescription($model->type));
-        } 
-        $model->read = 0;
-        $model->save(false);
+            $model->read = 0;
+            $model->save(false);
+        }
+        $criteria = new CDbCriteria;
+        $criteria->select = "id_user";
+        $criteria->distinct = TRUE;
+        $criteria->condition = "id_user != :idUser AND id_feeds = :idFeeds";
+        $criteria->params = array(
+            ':idFeeds' => $this->idFeeds->id_feeds,
+            ':idUser' => $this->idFeeds->user->id_user
+        );
+        $comments = FeedsComments::model()->findAll($criteria);
+        foreach ($comments as $coment) {
+            if ($this->id_user != $coment->id_user) {
+                $model = new Notification();
+                $user = Users::model()->findByPk($this->id_user);
+                $name = $user->profiles->firstname . " " . $user->profiles->lastname;
+                $model->type = Notification::TYPE_COMMENT_POST_OTHER;
+                $model->id_user = $coment->id_user;
+                $model->referation_link = Yii::app()->createUrl('m/feeds/feed', array('q' => $this->idFeeds->hash));
+                $model->word = str_replace("{friend}", $name, $model->getDescription($model->type));
+                $model->read = 0;
+                $model->save(false);
+            }
+        }
         parent::afterSave();
     }
+
 }

@@ -29,6 +29,7 @@ class Notification extends CActiveRecord
     const TYPE_HEAP_LEVEL = 6;
     const TYPE_INVITE = 7;
     const TYPE_ACCEPT_FRIEND = 8;
+    const TYPE_COMMENT_POST_OTHER = 9;
 
     public function getDescription($type)
     {
@@ -36,6 +37,9 @@ class Notification extends CActiveRecord
         switch ($type) {
             case self::TYPE_COMMENT_POST:
                 $description = "{friend} Commented your heap";
+                break;
+            case self::TYPE_COMMENT_POST_OTHER:
+                $description = "{friend} Commented on heap that you are commented";
                 break;
             case self::TYPE_TAGGING:
                 $description = "{friend} Tagging you in his heap";
