@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/app.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/uploadfile.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/mfb.css">
+        <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/css/recommended-styles.css">
         <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <link rel="stylesheet" href="<?php echo $baseUrl ?>assets/themes/town/style.css" id="theme-style">
         <!--<link rel="stylesheet" href="" id="theme-style">-->
@@ -1065,6 +1066,20 @@ Yii::app()->clientScript->registerScript('mentions', "
                     });
                 }
 
+            }).bind('input', function(e) { 
+                var ua = navigator.userAgent.toLowerCase(); 
+                var isAndroid = ua.indexOf('android') > -1; 
+                //&&  ua.indexOf('mobile'); 
+                alert(ua);
+                if(isAndroid) { 
+                    var char = this.value.charCodeAt(this.value.length - 1); 
+                    ".'$scope'.".data = char; 
+                    alert('hello' + char);
+                    if(e.keyCode === undefined){ 
+                            e.keyCode = char; 
+                    } 
+                    return true; 
+                } 
             });
             $('textarea.tag-group').mentionsInput({
                 onDataRequest: function (mode, query, callback) {
@@ -1404,6 +1419,8 @@ Yii::app()->clientScript->registerScript('event', "
 <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/underscore-min.js"></script>
 <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/jquery.mentionsInput.js"></script>
 <script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/mfb.min.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/bootstrap-typeahead.js"></script>
+<script type="text/javascript" src="<?php echo $baseUrl ?>assets/js/mention.js"></script>
 
 </body>
 

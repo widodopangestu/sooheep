@@ -190,22 +190,37 @@
     }
 
     function onInputBoxInput(e) {
-      updateValues();
-      updateMentionsCollection();
-      hideAutoComplete();
+        var ua = navigator.userAgent.toLowerCase();
+        var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+        if(isAndroid) {//certain versions of android mobile browser don't trigger the keypress event.
+                if(e.keyCode !== KEY.BACKSPACE) {
+                        var typedValue = String.fromCharCode(e.which || e.keyCode); //Takes the string that represent this CharCode
+                        inputBuffer.push(typedValue); //Push the value pressed into inputBuffer
+                }
+                alert("test on input android");
+        }
+                alert("test not in input android");
+        updateValues();
+        updateMentionsCollection();
 
-      var triggerCharIndex = _.lastIndexOf(inputBuffer, settings.triggerChar);
-      if (triggerCharIndex > -1) {
-        currentDataQuery = inputBuffer.slice(triggerCharIndex + 1).join('');
-        currentDataQuery = utils.rtrim(currentDataQuery);
-
-        _.defer(_.bind(doSearch, this, currentDataQuery));
-      }
+        var triggerCharIndex = _.lastIndexOf(inputBuffer, settings.triggerChar); //Returns the last match of the triggerChar in the inputBuffer
+        if (triggerCharIndex > -1) { //If the triggerChar is present in the inputBuffer array
+            currentDataQuery = inputBuffer.slice(triggerCharIndex + 1).join(''); //Gets the currentDataQuery
+            currentDataQuery = utils.rtrim(currentDataQuery); //Deletes the whitespaces
+            _.defer(_.bind(doSearch, this, currentDataQuery)); //Invoking the function doSearch ( Bind the function to this)
+        }
     }
 
+    //Takes the keypress event
     function onInputBoxKeyPress(e) {
-      var typedValue = String.fromCharCode(e.which || e.keyCode);
-      inputBuffer.push(typedValue);
+        var ua = navigator.userAgent.toLowerCase();
+        var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+        if(!isAndroid) {
+            if(e.keyCode !== KEY.BACKSPACE) { //If the key pressed is not the backspace
+                var typedValue = String.fromCharCode(e.which || e.keyCode); //Takes the string that represent this CharCode
+                inputBuffer.push(typedValue); //Push the value pressed into inputBuffer
+            }
+        }
     }
 
     function onInputBoxKeyDown(e) {
