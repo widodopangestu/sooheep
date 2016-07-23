@@ -40,7 +40,7 @@ class MjmChat extends CWidget
 		$config = array(
 			'host' => $this->host,
 			'port' => $this->port,
-			'user' => (!Yii::app()->user->isGuest) ? Yii::app()->user->name : null,
+			'user' => (!Yii::app()->user->isGuest) ? Users::model()->getFirstName(Yii::app()->user->id['id']) : null,
 		);
 		Yii::app()->clientScript->registerScript('mjmChatConfig', 'var mjmChatConfig='.CJavaScript::encode($config).';', CClientScript::POS_HEAD);
 

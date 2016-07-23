@@ -229,4 +229,17 @@ class Users extends CActiveRecord {
         return CHtml::link('<span style="color:#bc5228;">' . $this->profiles->firstname . ' ' . $this->profiles->lastname . '</span>', array('member/profile', 'q' => $this->hash));
     }
 
+    public function getFirstName($id = null) {
+        if ($id != null) {
+            $user = self::model()->findByPk($id);
+            if ($user) {
+                $fullname = $user->profiles->firstname;
+                $fullname == " " ? $user->email : $fullname;
+            }
+        } else {
+            $fullname = $this->profiles->firstname;
+            $fullname == " " ? $this->email : $fullname;
+        }
+        return $fullname;
+    }
 }
