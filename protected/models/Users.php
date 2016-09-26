@@ -11,6 +11,8 @@
  * @property string $hash
  * @property integer $id_roles
  * @property integer $activation
+ * @property string $hybridauth_provider_name
+ * @property string $hybridauth_provider_uid
  *
  * The followings are the available model relations:
  * @property FeedsComments[] $feedsComments
@@ -41,11 +43,11 @@ class Users extends CActiveRecord {
         return array(
             array('email, password, hash, id_roles', 'required'),
             array('id_roles', 'numerical', 'integerOnly' => true),
-            array('email, username, password, hash', 'length', 'max' => 255),
+            array('email, username, password, hash, hybridauth_provider_name, hybridauth_provider_uid', 'length', 'max' => 255),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id_user, email, username, password, hash, id_roles, activation', 'safe'),
-            array('id_user, email, username, password, hash, id_roles, activation', 'safe', 'on' => 'search'),
+            array('id_user, email, username, password, hash, id_roles, activation, hybridauth_provider_name, hybridauth_provider_uid', 'safe'),
+            array('id_user, email, username, password, hash, id_roles, activation, hybridauth_provider_name, hybridauth_provider_uid', 'safe', 'on' => 'search'),
         );
     }
 
@@ -241,5 +243,14 @@ class Users extends CActiveRecord {
             $fullname == " " ? $this->email : $fullname;
         }
         return $fullname;
+    }
+    
+    public function getUserByProviderAndId($provider_name, $provider_uid) {
+        $model = Users::model()->findByAttributes(array('hybridauth_provider_name' => $provider_name, 'hybridauth_provider_uid' => $provider_uid));
+        return $model;
+    }
+    public function getUserByEmail($email) {
+        $model = Users::model()->findByAttributes(array('email' => $email));
+        return $model;
     }
 }

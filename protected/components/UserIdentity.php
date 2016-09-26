@@ -39,6 +39,24 @@ class UserIdentity extends CUserIdentity
 		}	
 		return !$this->errorCode;
 	}
+	public function authenticateSso($provider_name, $provider_uid)
+	{
+		$users = Users::model()->find(array(
+			'condition' => 	"LOWER(hybridauth_provider_name) = :hybridauth_provider_name AND hybridauth_provider_uid = :hybridauth_provider_uid",
+			'params' => array(
+				':hybridauth_provider_name' => $provider_name,
+				':hybridauth_provider_uid'=> $provider_uid
+			)));
+		
+		if($users == NULL)
+			$this->errorCode=self::ERROR_USERNAME_INVALID;
+		else{
+			$this->_id = $users->id_user;
+			$this->_hash = $users->hash;
+			$this->errorCode=self::ERROR_NONE;
+		}	
+		return !$this->errorCode;
+	}
 	
 	public function getId(){
 		return array(

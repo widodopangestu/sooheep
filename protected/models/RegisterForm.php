@@ -22,6 +22,9 @@ class RegisterForm extends CFormModel
 	public $typeInterest;
 	public $interest;
 	public $item_interest;
+        
+	public $hybridauth_provider_name;
+	public $hybridauth_provider_uid;
 	
 	
 	public function rules()
@@ -34,7 +37,7 @@ class RegisterForm extends CFormModel
 			array('retypePassword', 'compare', 'compareAttribute' => 'password', 'on' => 'step1'),
 			array('email', 'email', 'on' => 'step1'),
 			array('password', 'length', 'min' => 6, 'on' => 'step1'),
-			array('birthDate, dayOf, monthOf, yearOf', 'safe', 'on' => 'step1'),
+			array('birthDate, dayOf, monthOf, yearOf,  hybridauth_provider_name, hybridauth_provider_uid', 'safe', 'on' => 'step1'),
 			//array('username, firstName, lastName, middleName, gender, password, retypePassword, email, country, state, city, birthDate', 'safe'),
 		);
 	}
@@ -95,6 +98,8 @@ class RegisterForm extends CFormModel
 		$user->email = strtolower($this->email);
 		$user->password = md5($this->password);
 		$user->hash = sha1($this->email);
+		$user->hybridauth_provider_name = $this->hybridauth_provider_name;
+		$user->hybridauth_provider_uid = $this->hybridauth_provider_uid;
 		$user->id_roles = 3;
 		if($user->save()){
 			$profile = new Profile;

@@ -2,8 +2,7 @@
 
 use yii\web\User;
 
-class MemberController extends Controller
-{
+class MemberController extends Controller {
 
     public $layout = '//layouts/main';
 
@@ -12,15 +11,13 @@ class MemberController extends Controller
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function filters()
-    {
+    public function filters() {
         return array(
             'accessControl', // perform access control for CRUD operations
         );
     }
 
-    public function accessRules()
-    {
+    public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('login', 'signup', 'logout', 'searchfriend', 'updateAllUser'),
@@ -36,13 +33,11 @@ class MemberController extends Controller
         );
     }
 
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $this->render('index');
     }
 
-    public function actionLogin()
-    {
+    public function actionLogin() {
 
         $this->layout = '//layouts/login';
         $formLog = new LoginForm;
@@ -53,14 +48,99 @@ class MemberController extends Controller
             if ($formLog->validate() && $formLog->login())
                 $this->redirect(Yii::app()->createUrl('/m/feeds/index'));
         }
+        $path = Yii::getPathOfAlias('ext.HybridAuth');
+        require_once $path . '/hybridauth-2.7.0/hybridauth/Hybrid/Auth.php';  //path to the Auth php file within HybridAuth folder
+        require_once $path . '/hybridauth-2.7.0/hybridauth/Hybrid/Endpoint.php';  //path to the Endpoint php file within HybridAuth folder
+        $config = $path . '/hybridauth-2.7.0/hybridauth/config.php';
 
+        if (isset($_REQUEST['provider'])) {
+
+            $provider_name = $_REQUEST["provider"];
+
+            try {
+                // initialize Hybrid_Auth class with the config file
+                $hybridauth = new Hybrid_Auth($config);
+                // try to authenticate with the selected provider
+                $adapter = $hybridauth->authenticate($provider_name);
+
+                // then grab the user profile
+                $user_profile = $adapter->getUserProfile();
+
+                /*
+                 * $user_profile->webSiteURL
+                 * $user_profile->profileURL
+                 * $user_profile->photoURL
+                 * $user_profile->displayName
+                 * $user_profile->description
+                 * $user_profile->firstName
+                 * $user_profile->gender => "male"
+                 * $user_profile->language => "id_ID"
+                 * $user_profile->email
+                 * $user_profile->emailVerified
+                 * $user_profile->region
+                 * $user_profile->username
+                 * $user_profile->convertInfoURL
+                 * 
+                 */
+                $user = Users::model()->getUserByProviderAndId($provider_name, $user_profile->identifier);
+                //if user not registered yet by sso.
+                if ($user == null && !empty($user_profile->email)) {
+                    $user = Users::model()->getUserByEmail($user_profile->email);
+                    $user->hybridauth_provider_name = $provider_name;
+                    $user->hybridauth_provider_uid = $user_profile->identifier;
+                    $user->save(false);
+                    //if user not registered yet by email 
+                    if ($user == null) {
+                        $formReg = new RegisterForm("step1");
+                        $formReg->email = $user_profile->email;
+                        $formReg->password = sha1($user_profile->email);
+                        $formReg->retypePassword = sha1($user_profile->email);
+                        $formReg->firstName = $user_profile->firstName;
+                        $formReg->lastName = $user_profile->lastName;
+                        $formReg->gender = strtoupper($user_profile->gender);
+                        $formReg->birthDate = 1970 - 01 - 01;
+                        $formReg->country = 107; //indonesia
+                        $formReg->city = 162; // jakarta
+                        $formReg->hybridauth_provider_name = $provider_name;
+                        $formReg->hybridauth_provider_uid = $user_profile->identifier;
+                        if ($formReg->validate()) {
+                            $formReg->saveProfile();
+                            $user = Users::model()->getUserByProviderAndId($provider_name, $user_profile->identifier);
+                        }
+                    }
+                }
+                if ($user !== null) {
+                    //login user
+                    $formLog = new LoginForm;
+                    $formLog->username = $user->email;
+                    $formLog->password = $user->password;
+                    $formLog->hybridauth_provider_name = $provider_name;
+                    $formLog->hybridauth_provider_uid = $user_profile->identifier;
+                    if ($formLog->loginSso()) {
+                        $this->redirect(Yii::app()->createUrl('/m/feeds/index'));
+                    }
+                }
+            }// something went wrong?
+            catch (Exception $e) {
+                Yii::app()->session->destroy();
+                $this->redirect('/');
+            }
+        }
+        if (isset($_REQUEST['hauth_start']) || isset($_REQUEST['hauth_done'])) {
+            Hybrid_Endpoint::process();
+        }
         $this->render('login', array(
             'formLog' => $formLog
         ));
     }
 
-    public function actionSignup()
-    {
+    public function actionSocialLogin() {
+        Yii::import('application.components.HybridAuthIdentity');
+        $path = Yii::getPathOfAlias('ext.HybridAuth');
+        require_once $path . '/hybridauth-' . HybridAuthIdentity::VERSION . '/hybridauth/index.php';
+    }
+
+    public function actionSignup() {
         $this->layout = '//layouts/login';
         $formLog = new LoginForm;
         $formReg = new RegisterForm("step1");
@@ -88,8 +168,7 @@ class MemberController extends Controller
         ));
     }
 
-    public function actionUpdateAllUser()
-    {
+    public function actionUpdateAllUser() {
         $user = Users::model()->findAll();
         foreach ($user as $u) {
             $u->email = strtolower($u->email);
@@ -103,14 +182,12 @@ class MemberController extends Controller
         }
     }
 
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::app()->user->logout();
         $this->redirect(array('login'));
     }
 
-    public function actionSearchfriend($mode = null)
-    {
+    public function actionSearchfriend($mode = null) {
         $alluser = new Profile;
         $alluser->unsetAttributes();  // clear any default values
         if (isset($_GET['Profile'])) {
@@ -129,8 +206,7 @@ class MemberController extends Controller
         }
     }
 
-    public function actionProfile($q)
-    {
+    public function actionProfile($q) {
         $user = Users::model()->findByAttributes(array('hash' => $q));
         $feed = new Feeds();
 
@@ -160,8 +236,7 @@ class MemberController extends Controller
         }
     }
 
-    public function actionNotification()
-    {
+    public function actionNotification() {
         $user = Users::model()->findByPk(Yii::app()->user->id['id']);
 
         if ($user != null) {
@@ -188,8 +263,7 @@ class MemberController extends Controller
         }
     }
 
-    public function actionAddfriends($q)
-    {
+    public function actionAddfriends($q) {
         $cekFren = Users::model()->findByAttributes(array('hash' => $q));
         if ($cekFren != null) {
             $cekAgain = Friend::model()->findByAttributes(array('id_user' => $cekFren->id_user, 'id_user_friend' => Yii::app()->user->id['id']));
@@ -212,8 +286,7 @@ class MemberController extends Controller
         }
     }
 
-    public function actionConfirmfriends($q)
-    {
+    public function actionConfirmfriends($q) {
         $user = Users::model()->findByAttributes(array('hash' => $q));
         $fren = Friend::model()->findByAttributes(array('id_user' => $user->id_user, 'id_user_friend' => Yii::app()->user->id['id']));
         $fren->approval = 1;
@@ -225,8 +298,7 @@ class MemberController extends Controller
         }
     }
 
-    public function actionGallery($id = null)
-    {
+    public function actionGallery($id = null) {
         $id_user = ($id == null) ? Yii::app()->user->id['id'] : $id;
         //images
         $crImage = new CDbCriteria;
@@ -280,8 +352,7 @@ class MemberController extends Controller
         ));
     }
 
-    public function actionChangeprofile()
-    {
+    public function actionChangeprofile() {
         $images = CUploadedFile::getInstanceByName('images_profile');
         if ($images != null) {
             $ImageHandler = new ImageHandler();
@@ -320,8 +391,7 @@ class MemberController extends Controller
         }
     }
 
-    public function actionChangeBackgroundprofile()
-    {
+    public function actionChangeBackgroundprofile() {
         $images = CUploadedFile::getInstanceByName('images_background');
         if ($images != null) {
             $ImageHandler = new ImageHandler();
