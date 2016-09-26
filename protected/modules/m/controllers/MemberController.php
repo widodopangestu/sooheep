@@ -86,9 +86,6 @@ class MemberController extends Controller {
                 //if user not registered yet by sso.
                 if ($user == null && !empty($user_profile->email)) {
                     $user = Users::model()->getUserByEmail($user_profile->email);
-                    $user->hybridauth_provider_name = $provider_name;
-                    $user->hybridauth_provider_uid = $user_profile->identifier;
-                    $user->save(false);
                     //if user not registered yet by email 
                     if ($user == null) {
                         $formReg = new RegisterForm("step1");
@@ -107,7 +104,23 @@ class MemberController extends Controller {
                             $formReg->saveProfile();
                             $user = Users::model()->getUserByProviderAndId($provider_name, $user_profile->identifier);
                         }
+                    } else {                        
+                        $user->hybridauth_provider_name = $provider_name;
+                        $user->hybridauth_provider_uid = $user_profile->identifier;
+                        $user->save(false);
                     }
+                } elseif(empty($user_profile->email)) {                    
+                    $formReg = new RegisterForm("step1");
+                    $formReg->email = $user_profile->email;
+                    $formReg->firstName = $user_profile->firstName;
+                    $formReg->lastName = $user_profile->lastName;
+                    $formReg->gender = strtoupper($user_profile->gender);
+                    $formReg->hybridauth_provider_name = $provider_name;
+                    $formReg->hybridauth_provider_uid = $user_profile->identifier;
+
+                    $this->render('register', array(
+                        'formReg' => $formReg
+                    ));
                 }
                 if ($user !== null) {
                     //login user
@@ -128,6 +141,20 @@ class MemberController extends Controller {
         }
         if (isset($_REQUEST['hauth_start']) || isset($_REQUEST['hauth_done'])) {
             Hybrid_Endpoint::process();
+        }
+        if (isset($_POST['step1'])) {
+            if (isset($_POST['RegisterForm'])) {
+                $formReg->attributes = $_POST['RegisterForm'];
+
+                if ($formReg->validate()) {
+                    if ($formReg->saveProfile()) {
+                        $formLog->username = $formReg->email;
+                        $formLog->password = $formReg->password;
+                        if ($formLog->validate() && $formLog->login())
+                            $this->redirect(Yii::app()->createUrl('/m/feeds/index'));
+                    }
+                }
+            }
         }
         $this->render('login', array(
             'formLog' => $formLog
