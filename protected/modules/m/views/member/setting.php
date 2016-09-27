@@ -1,77 +1,26 @@
-<div class="navbar">
-    <div class="navbar-inner">
-        <div class="left">
-            <a class="link" onclick="window.location.href = '<?php echo Yii::app()->createUrl('/m/member/login') ?>';" href="#">
-                <span class="icon-chevron-left"></span> <span>Back</span>
-            </a>
-        </div>
-        <div class="center sliding">Lets Join Us</div>
-        <div class="right">
-        </div>
-    </div>
-</div>
-
-<div class="pages navbar-fixed toolbar-fixed">
-    <!-- Pages -->
-    <div class="pages">
-        <div class="page no-toolbar" data-page="settings">
+<div class="pages">
+    <div class="page no-toolbar" data-page="settings">
+        <div class="page-content ">
             <div class="page-content">
 
                 <?php
+                $registerForm = new RegisterForm();
                 $form2 = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
                     'id' => 'login-form2',
                     'type' => 'horizontal',
-                    'enableAjaxValidation' => true,
-                    'clientOptions' => array(
-                        'validateOnSubmit' => true,
-                    ),
-                    'action' => CController::createUrl('member/signup')
+                    'action' => CController::createUrl('member/setting')
                 ));
                 ?>
 
-                <?php echo $form2->errorSummary($formReg); ?>
                 <div class="list-block">
+                <?php echo $form2->errorSummary($formReg); ?>
                     <ul>
-                        <!-- Text inputs -->
-                        <li>
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <div class="item-title label">E-mail</div>
-                                    <div class="item-input">
-                                        <?php echo $form2->textField($formReg, 'email', array('placeholder' => 'Type Your Email')) ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <div class="item-title label">Password</div>
-                                    <div class="item-input">
-                                        <?php echo $form2->passwordField($formReg, 'password', array('placeholder' => 'Type Your Password')) ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <div class="item-title label">Retype Password</div>
-                                    <div class="item-input">
-                                        <?php echo $form2->passwordField($formReg, 'retypePassword', array('placeholder' => 'Retype Your Password')) ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-
                         <li>
                             <div class="item-content">
                                 <div class="item-inner">
                                     <div class="item-title label">First Name</div>
                                     <div class="item-input">
-                                        <?php echo $form2->textField($formReg, 'firstName', array('placeholder' => 'First Name')) ?>
+                                        <?php echo $form2->textField($formReg, 'firstname', array('placeholder' => 'First Name')) ?>
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +31,7 @@
                                 <div class="item-inner">
                                     <div class="item-title label">Last Name</div>
                                     <div class="item-input">
-                                        <?php echo $form2->textField($formReg, 'lastName', array('placeholder' => 'Last Name')) ?>
+                                        <?php echo $form2->textField($formReg, 'lastname', array('placeholder' => 'Last Name')) ?>
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +42,7 @@
                                 <div class="item-inner">
                                     <div class="item-title label">Gender</div>
                                     <div class="item-input">
-                                        <?php echo $form2->dropDownList($formReg, 'gender', $formReg->getDataGender()) ?>
+                                        <?php echo $form2->dropDownList($formReg, 'gender', $registerForm->getDataGender()) ?>
                                     </div>
                                 </div>
                             </div>
@@ -104,9 +53,9 @@
                                 <div class="item-inner">
                                     <div class="item-title label">Birth Date</div>
                                     <div class="item-input">
-                                        <?php echo $form2->dropDownList($formReg, 'dayOf', $formReg->getDate(), array('class' => 'date')) ?>
-                                        <?php echo $form2->dropDownList($formReg, 'monthOf', $formReg->getMonth(), array('class' => 'month')) ?>
-                                        <?php echo $form2->dropDownList($formReg, 'yearOf', $formReg->getYear(10), array('class' => 'year')) ?>
+                                        <?php echo $form2->dropDownList($formReg, 'dayOf', $registerForm->getDate()) ?>
+                                        <?php echo $form2->dropDownList($formReg, 'monthOf', $registerForm->getMonth()) ?>
+                                        <?php echo $form2->dropDownList($formReg, 'yearOf', $registerForm->getYear(10)) ?>
                                     </div>
                                 </div>
                             </div>
@@ -116,14 +65,14 @@
                         <li>
                             <a href="#" class="item-link smart-select" data-searchbar="true" data-searchbar-placeholder="Search Country" data-open-in="popup">
                                 <?php
-                                echo $form2->dropDownList($formReg, 'country', $formReg->getCountry(), array(
+                                echo $form2->dropDownList($formReg, 'id_country', $registerForm->getCountry(), array(
                                     'class' => "form-control form-effect ",
                                     'empty' => 'Chose Country',
                                     //'onchange' => 'alert("test")',
                                     'ajax' => array(
                                         'type' => 'POST', //request type
-                                        'url' => CController::createUrl('/new/getcity'), //url to call.
-                                        'update' => "#RegisterForm_city", //selector to update
+                                        'url' => CController::createUrl('/new/getcity2'), //url to call.
+                                        'update' => "#Profile_id_city", //selector to update
                                         'beforeSend' => 'function(){
 													      myApp.showPreloader();
 													}',
@@ -149,15 +98,15 @@
                         <li>
                             <a href="#" class="item-link smart-select" data-searchbar="true" data-searchbar-placeholder="Search Country" data-open-in="popup" data-virtual-list="true" data-virtual-list-height="55">
                                 <?php
-                                if (isset($formReg->city) && $formReg->city != null) {
+                                if (isset($formReg->id_city) && $formReg->id_city != null) {
                                     $dataCity = CHtml::listData(MasterCity::model()->findAll(array(
                                                         'condition' => 'city_country_id = :parent_id',
-                                                        'params' => array(':parent_id' => intval($formReg->country))
+                                                        'params' => array(':parent_id' => intval($formReg->id_country))
                                                     )), 'city_id', 'city_name');
                                 } else
                                     $dataCity = array();
 
-                                echo $form2->dropDownList($formReg, 'city', $dataCity, array(
+                                echo $form2->dropDownList($formReg, 'id_city', $dataCity, array(
                                     'class' => "form-control form-effect ",
                                     'empty' => 'Chose City',
                                 ))
@@ -172,13 +121,11 @@
                                 </div>
                             </a>
                         </li>
-
-                        <?php echo CHtml::hiddenField('step1', 'yeah') ?>
                         <li>
                             <div class="item-content">
                                 <div class="item-inner">
                                     <div class="input-submit pull-right">
-                                        <?php echo CHtml::htmlButton('Join', array('type' => 'submit', 'class' => 'button button-big js-form-submit button-fill button-primary')) ?>
+                                        <?php echo CHtml::htmlButton('Save', array('type' => 'submit', 'class' => 'button button-big js-form-submit button-fill button-primary')) ?>
                                     </div>
                                 </div>
                             </div>
@@ -191,4 +138,3 @@
         </div>
     </div>
 </div>
-

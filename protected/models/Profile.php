@@ -26,6 +26,9 @@
 class Profile extends CActiveRecord {
 
     public $globalSearch = NULL;
+    public $dayOf;
+    public $monthOf;
+    public $yearOf;
 
     /**
      * @return string the associated database table name
@@ -41,7 +44,7 @@ class Profile extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id_user, firstname, lastname, gender', 'required'),
+            array('id_user, firstname, lastname, gender, dayOf, monthOf, yearOf', 'required'),
             array('birth_date, id_country, id_city', 'required', 'on' => 'interststep'),
             array('id_user, id_country, id_state, id_city', 'numerical', 'integerOnly' => true),
             array('firstname, middlename, lastname, uniqueid', 'length', 'max' => 255),
@@ -49,7 +52,7 @@ class Profile extends CActiveRecord {
             array('phone_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id_profile, id_user, firstname, middlename, lastname, gender, phone_number, birth_date, id_country, id_state, id_city, uniqueid', 'safe', 'on' => 'search'),
+            array('id_profile, id_user, firstname, middlename, lastname, gender, phone_number, birth_date, id_country, id_state, id_city, uniqueid, dayOf, monthOf, yearOf', 'safe', 'on' => 'search'),
         );
     }
 
@@ -120,6 +123,12 @@ class Profile extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
+    }
+
+    public function beforeValidate() {
+        $this->birth_date = $this->yearOf . "-" . $this->monthOf . "-" . $this->dayOf;
+
+        return true;
     }
 
     public function getProfilePicture($class = "", $style = "") {
@@ -229,8 +238,7 @@ class Profile extends CActiveRecord {
         } elseif ($cek != null && $cek2 == null) {
             if ($cek->approval == 0)
                 $tombol = '<div style="padding: 5px; color: #bc5228; background-color: rgb(255, 255, 255); border-radius: 5px;"><i class="fa fa-clock-o" style="color:#f00;"></i></div>';
-       
-            } elseif ($cek == null && $cek2 != null) {
+        } elseif ($cek == null && $cek2 != null) {
             if ($cek2->approval == 0)
                 $tombol = '<div style="padding: 5px; color: #bc5228; background-color: rgb(255, 255, 255); border-radius: 5px;" onclick="window.location=' . CController::createUrl('/m/member/confirmfriends', array('q' => $this->idUser->hash)) . '"><i class="fa fa-eye" style="color:#f00;"></i></div>';
         }

@@ -24,7 +24,7 @@ class MemberController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'profile', 'confirmfriends', 'gallery', 'addfriends', 'changeprofile', 'changeBackgroundprofile', 'notification'),
+                'actions' => array('index', 'profile', 'confirmfriends', 'gallery', 'addfriends', 'changeprofile', 'changeBackgroundprofile', 'notification', 'setting'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -104,12 +104,12 @@ class MemberController extends Controller {
                             $formReg->saveProfile();
                             $user = Users::model()->getUserByProviderAndId($provider_name, $user_profile->identifier);
                         }
-                    } else {                        
+                    } else {
                         $user->hybridauth_provider_name = $provider_name;
                         $user->hybridauth_provider_uid = $user_profile->identifier;
                         $user->save(false);
                     }
-                } elseif(empty($user_profile->email)) {                    
+                } elseif (empty($user_profile->email)) {
                     $formReg = new RegisterForm("step1");
                     $formReg->email = $user_profile->email;
                     $formReg->firstName = $user_profile->firstName;
@@ -376,6 +376,29 @@ class MemberController extends Controller {
             'pageMusics' => $pageMusics,
             'feedFiles' => $feedFiles,
             'pageFiles' => $pageFiles,
+        ));
+    }
+
+    public function actionSetting() {
+        $id_user = Yii::app()->user->id['id'];
+
+        $formReg = Profile::model()->findByAttributes(array('id_user' => $id_user));
+        $formReg->dayOf = date('d', strtotime($formReg->birth_date));
+        $formReg->monthOf = date('m', strtotime($formReg->birth_date));
+        $formReg->yearOf = date('Y', strtotime($formReg->birth_date));
+        if (isset($_POST['Profile'])) {
+            $formReg->attributes = $_POST['Profile'];
+
+            //$this->performAjaxValidation($formReg);
+            if ($formReg->validate()) {
+                if ($formReg->save()) {
+                    $this->redirect(Yii::app()->createUrl('/m/feeds/index'));
+                }
+            }
+        }
+
+        $this->render('setting', array(
+            'formReg' => $formReg
         ));
     }
 

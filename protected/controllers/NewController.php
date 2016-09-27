@@ -208,6 +208,21 @@ class NewController extends Controller
 		    }
 		}
 	}
+	public function actionGetcity2(){
+		if(isset($_POST['Profile']['id_country'])){
+			$data = CHtml::listData(MasterCity::model()->findAll(array(
+				'condition'=>'city_country_id = :parent_id',
+				'order' => 'trim(city_name) ASC',
+				'params' =>array(':parent_id'=>intval($_POST['Profile']['id_country'])),
+				
+			)),'city_id','city_name');
+ 
+		    foreach($data as $value=>$name)
+		    {
+		        echo CHtml::tag('option', array('value'=>$value),CHtml::encode($name),true);
+		    }
+		}
+	}
 		
 	protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form2') {
